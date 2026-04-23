@@ -148,6 +148,12 @@
 
             document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
             document.getElementById('view-' + viewId).style.display = 'flex';
+            
+            // Refresh Three.js canvas size if timeline is opened
+            if (viewId === 'timeline' && window.TimelineRenderer && window.TimelineRenderer.refresh) {
+                // Give the browser a tiny bit of time to update DOM layout display: flex
+                setTimeout(() => window.TimelineRenderer.refresh(), 10);
+            }
         }
     </script>
 </body>

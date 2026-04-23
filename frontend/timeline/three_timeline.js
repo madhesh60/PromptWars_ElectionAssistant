@@ -10,6 +10,7 @@ window.TimelineRenderer = (function() {
     let container;
     let animationId;
     let electionDataRef;
+    let particlesMesh;
 
     function init(containerId, data) {
         container = document.getElementById(containerId);
@@ -46,6 +47,23 @@ window.TimelineRenderer = (function() {
         const pointLight = new THREE.PointLight(0x0A66C2, 1);
         pointLight.position.set(10, 10, 10);
         scene.add(pointLight);
+
+        // Particle background
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 700;
+        const posArray = new Float32Array(particlesCount * 3);
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 100;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.2,
+            color: 0x0A66C2,
+            transparent: true,
+            opacity: 0.6
+        });
+        particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
 
         // Raycaster for interactions
         raycaster = new THREE.Raycaster();
@@ -93,7 +111,8 @@ window.TimelineRenderer = (function() {
         scene.add(line);
 
         // Nodes
-        const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+        const geometry = new THREE.IcosahedronGeometry(1.5, 0);
+        
         
         electionDataRef.forEach((event, index) => {
             const isCompleted = new Date() > new Date(event.timestamp);
@@ -104,7 +123,14 @@ window.TimelineRenderer = (function() {
                 shininess: 100
             });
             
-            const sphere = new THREE.Mesh(sphereGeometry, material);
+            const sphere = new THREE.Mesh(geometry, material);
+            
+            // Add wireframe for a techy look
+            const wireframeGeometry = new THREE.WireframeGeometry(geometry);
+            const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
+            const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+            sphere.add(wireframe);
+
             sphere.position.set(startX + (index * spacing), 0, 0);
             
             // Store data inside userData for interaction
@@ -125,6 +151,7 @@ window.TimelineRenderer = (function() {
         if (!camera || !renderer || !container) return;
         const width = container.clientWidth;
         const height = container.clientHeight;
+        if (width === 0 || height === 0) return; // Prevent sizing to 0 when hidden
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
@@ -182,6 +209,11 @@ window.TimelineRenderer = (function() {
             node.rotation.x += 0.005;
         });
 
+        if (particlesMesh) {
+            particlesMesh.rotation.y += 0.0005;
+            particlesMesh.rotation.x += 0.0002;
+        }
+
         // Hover effect checking
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(nodes);
@@ -207,5 +239,5 @@ window.TimelineRenderer = (function() {
         renderer.render(scene, camera);
     }
 
-    return { init };
+    return { init, refresh: onWindowResize };
 })();
