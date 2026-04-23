@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key'); // replace dummy later or rely on env
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || AIzaSyDY-Qu97DG_r8b1kut19WdqxeP8X-EcLr0); // replace dummy later or rely on env
 
 // Endpoint to expose API keys to the frontend (for local dev purposes only)
 app.get('/api/config', (req, res) => {
