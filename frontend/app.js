@@ -60,4 +60,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (window.AgenticSystem) {
         window.AgenticSystem.init(AppState.electionData);
     }
+
+    // Step 7: Initialize Feature Tools (Ballot, Bias, Rep, Constitution)
+    if (window.FeatureTools) {
+        window.FeatureTools.init();
+    }
 });
