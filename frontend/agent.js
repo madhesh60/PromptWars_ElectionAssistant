@@ -45,19 +45,56 @@ window.AgenticSystem = (function() {
         if (!('serviceWorker' in navigator)) return;
 
         navigator.serviceWorker.ready.then(registration => {
-            // In a real app, you would send this to your server to schedule Web Push
-            // or use the Background Sync / periodic sync API.
-            // For a frontend-only demo, we send the data to the Service Worker 
-            // which could set up internal timers (though SWs sleep, so a real backend is needed for true long-term push).
-            
-            // Simulating by sending schedule to the service worker.
+            // Send schedule to the service worker.
             registration.active.postMessage({
                 type: 'SCHEDULE_REMINDERS',
                 data: electionData
             });
             
             console.log("Reminders scheduled in service worker.");
+            
+            // For demonstration purposes, mock the alarm triggering after 5 seconds
+            statusText.innerText += "\n(Demo: An alarm will trigger in 5 seconds...)";
+            setTimeout(() => {
+                triggerAlarm();
+            }, 5000);
         });
+    }
+
+    function triggerAlarm() {
+        // 1. Play an alarm sound
+        const alarmSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+        alarmSound.loop = true; // Loop the alarm until acknowledged
+        
+        // Try to play it
+        alarmSound.play().catch(e => console.warn("Browser blocked audio autoplay. User interaction required.", e));
+        
+        // 2. Show the push notification
+        if ('Notification' in window && Notification.permission === 'granted') {
+            const notification = new Notification("⏰ Election Alert!", {
+                body: "An important election event is approaching! Click to dismiss alarm.",
+                icon: "https://cdn-icons-png.flaticon.com/512/8282/8282119.png",
+                requireInteraction: true
+            });
+            
+            // Stop sound when notification is clicked or closed
+            notification.onclick = () => {
+                alarmSound.pause();
+                alarmSound.currentTime = 0;
+                window.focus();
+                notification.close();
+            };
+            
+            notification.onclose = () => {
+                alarmSound.pause();
+                alarmSound.currentTime = 0;
+            };
+        } else {
+            // Fallback alert if notifications were somehow blocked
+            alert("⏰ Election Alert! An important election event is approaching!");
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+        }
     }
 
     function exportToCalendar() {
