@@ -80,7 +80,7 @@ window.FeatureTools = (function() {
 
             showLoading(output);
             try {
-                const prompt = `You are an Indian Election expert. The user has pasted an election measure, policy, or party manifesto below.
+                const prompt = `You are an Indian Election expert. The user has pasted an election measure, policy below.
 Explain it in simple, plain language that any citizen can understand.
 Provide:
 - A 2-3 sentence summary

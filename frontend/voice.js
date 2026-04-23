@@ -128,12 +128,7 @@ window.VoiceAssistant = (function() {
     }
 
     async function askGemini(query) {
-        const apiKey = _config.geminiApiKey;
-        if (!apiKey || apiKey === 'REPLACE_WITH_YOUR_GEMINI_KEY') {
-            return "Please configure your Gemini API key to get answers.";
-        }
-
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const url = `http://localhost:3000/api/chat`;
         const payload = {
             contents: [{ role: "user", parts: [{ text: systemPrompt + "\n\nUser Question: " + query }] }]
         };
@@ -145,24 +140,17 @@ window.VoiceAssistant = (function() {
         });
 
         const data = await response.json();
-        if (data && data.candidates && data.candidates.length > 0) {
-            return data.candidates[0].content.parts[0].text;
+        if (data && data.response) {
+            return data.response;
         }
         throw new Error("Failed to get response from Gemini");
     }
 
     async function playTTS(text) {
-        const apiKey = _config.googleTtsApiKey;
-        if (!apiKey || apiKey === 'REPLACE_WITH_YOUR_GOOGLE_TTS_KEY') return;
-
-        const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
+        const url = `http://localhost:3000/api/tts`;
         const cleanText = text.replace(/[*_#`]/g, '');
 
-        const payload = {
-            input: { text: cleanText },
-            voice: { languageCode: 'en-IN', name: 'en-IN-Standard-D' },
-            audioConfig: { audioEncoding: 'MP3' }
-        };
+        const payload = { text: cleanText };
 
         const response = await fetch(url, {
             method: 'POST',

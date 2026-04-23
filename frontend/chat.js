@@ -90,12 +90,7 @@ window.ChatAssistant = (function() {
     }
 
     async function askGemini(query) {
-        const apiKey = _config.geminiApiKey;
-        if (!apiKey || apiKey === 'REPLACE_WITH_YOUR_GEMINI_KEY') {
-            return "Please configure your Gemini API key in the configuration to chat.";
-        }
-
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const url = `http://localhost:3000/api/chat`;
         
         conversationContext.push({ role: "user", parts: [{ text: query }] });
 
@@ -119,8 +114,8 @@ window.ChatAssistant = (function() {
 
         const data = await response.json();
         
-        if (data && data.candidates && data.candidates.length > 0) {
-            const replyText = data.candidates[0].content.parts[0].text;
+        if (data && data.response) {
+            const replyText = data.response;
             conversationContext.push({ role: "model", parts: [{ text: replyText }] });
             
             if (conversationContext.length > 10) {

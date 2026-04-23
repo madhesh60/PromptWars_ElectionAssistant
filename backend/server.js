@@ -22,12 +22,12 @@ const PORT = process.env.PORT || 3000;
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 // ──────────────────────────────────────────────
-// GET /api/config — Serve API keys to the frontend (local dev only)
+// GET /api/config — Config status
 // ──────────────────────────────────────────────
 app.get('/api/config', (req, res) => {
     res.json({
-        geminiApiKey: process.env.GEMINI_API_KEY || '',
-        googleTtsApiKey: process.env.GOOGLE_TTS_API_KEY || '',
+        status: 'secure',
+        message: 'API keys are secured on the backend.'
     });
 });
 
@@ -76,6 +76,65 @@ app.post('/api/gemini', async (req, res) => {
     } catch (error) {
         console.error("Gemini Proxy Error:", error.message || error);
         res.status(500).json({ error: "Gemini request failed." });
+    }
+});
+
+// ──────────────────────────────────────────────
+// POST /api/chat — Proxy for Chat Assistant
+// Body: { contents: array }
+// ──────────────────────────────────────────────
+app.post('/api/chat', async (req, res) => {
+    try {
+        const { contents } = req.body;
+        if (!contents) return res.status(400).json({ error: "Contents are required." });
+
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        
+        // Use generateContent with the history of contents
+        const result = await model.generateContent({ contents });
+        const text = result.response.text();
+        res.json({ response: text });
+
+    } catch (error) {
+        console.error("Gemini Chat Proxy Error:", error.message || error);
+        res.status(500).json({ error: "Gemini chat request failed." });
+    }
+});
+
+// ──────────────────────────────────────────────
+// POST /api/tts — Proxy for Google TTS
+// Body: { text: string }
+// ──────────────────────────────────────────────
+app.post('/api/tts', async (req, res) => {
+    try {
+        const { text } = req.body;
+        if (!text) return res.status(400).json({ error: "Text is required." });
+
+        const apiKey = process.env.GOOGLE_TTS_API_KEY;
+        if (!apiKey) return res.status(500).json({ error: "TTS API key not configured." });
+
+        const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
+        const payload = {
+            input: { text },
+            voice: { languageCode: 'en-IN', name: 'en-IN-Standard-D' },
+            audioConfig: { audioEncoding: 'MP3' }
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (data.audioContent) {
+            res.json({ audioContent: data.audioContent });
+        } else {
+            res.status(500).json({ error: "Failed to generate TTS audio." });
+        }
+    } catch (error) {
+        console.error("TTS Proxy Error:", error.message || error);
+        res.status(500).json({ error: "TTS request failed." });
     }
 });
 
