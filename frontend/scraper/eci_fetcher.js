@@ -1,74 +1,99 @@
 /**
- * eci_fetcher.js
- * Module to fetch or provide election schedule data.
+ * eci_fetcher.js — Election data fetcher module.
+ * Tries the backend API first (Gemini-powered), falls back to static data if offline.
  */
 
 window.ECIFetcher = (function() {
-    
-    // Hardcoded static dataset (Fallback)
-    // Currently populated with typical Indian Lok Sabha / State election sample data
+
+    // Static fallback dataset — used when the backend server is not running
     const staticElectionData = [
         {
             id: 'phase1',
             phase: 'Phase 1',
-            date: '2026-04-19',
-            description: 'Notification and Last Date of Registration for Phase 1.',
-            timestamp: new Date('2026-04-19T00:00:00').getTime()
+            date: '2024-04-19',
+            description: 'Voting for 102 constituencies across 21 states and UTs.',
+            timestamp: new Date('2024-04-19T00:00:00').getTime()
         },
         {
             id: 'phase2',
             phase: 'Phase 2',
-            date: '2026-04-26',
-            description: 'Scrutiny of Nominations for Phase 2 constituencies.',
-            timestamp: new Date('2026-04-26T00:00:00').getTime()
+            date: '2024-04-26',
+            description: 'Voting for 89 constituencies across 13 states and UTs.',
+            timestamp: new Date('2024-04-26T00:00:00').getTime()
         },
         {
             id: 'phase3',
             phase: 'Phase 3',
-            date: '2026-05-07',
-            description: 'Polling Day for Phase 3 across 12 states.',
-            timestamp: new Date('2026-05-07T00:00:00').getTime()
+            date: '2024-05-07',
+            description: 'Voting for 94 constituencies across 12 states and UTs.',
+            timestamp: new Date('2024-05-07T00:00:00').getTime()
         },
         {
             id: 'phase4',
             phase: 'Phase 4',
-            date: '2026-05-13',
-            description: 'Polling Day for Phase 4.',
-            timestamp: new Date('2026-05-13T00:00:00').getTime()
+            date: '2024-05-13',
+            description: 'Voting for 96 constituencies across 10 states and UTs.',
+            timestamp: new Date('2024-05-13T00:00:00').getTime()
+        },
+        {
+            id: 'phase5',
+            phase: 'Phase 5',
+            date: '2024-05-20',
+            description: 'Voting for 49 constituencies across 8 states and UTs.',
+            timestamp: new Date('2024-05-20T00:00:00').getTime()
+        },
+        {
+            id: 'phase6',
+            phase: 'Phase 6',
+            date: '2024-05-25',
+            description: 'Voting for 58 constituencies across 7 states and UTs.',
+            timestamp: new Date('2024-05-25T00:00:00').getTime()
+        },
+        {
+            id: 'phase7',
+            phase: 'Phase 7',
+            date: '2024-06-01',
+            description: 'Final phase — voting for 57 constituencies across 8 states.',
+            timestamp: new Date('2024-06-01T00:00:00').getTime()
         },
         {
             id: 'results',
             phase: 'Results Day',
-            date: '2026-06-04',
-            description: 'Counting of votes and declaration of results.',
-            timestamp: new Date('2026-06-04T00:00:00').getTime()
+            date: '2024-06-04',
+            description: 'Counting of votes and declaration of results for all 543 seats.',
+            timestamp: new Date('2024-06-04T00:00:00').getTime()
         }
     ];
 
-    async function fetchFromECI() {
+    // Try fetching dynamic data from the backend (Gemini-powered)
+    async function fetchFromBackend() {
         try {
-            console.log("Fetching dynamic 2024 Election schedule from Gemini API Backend...");
-            
-            // Call our Node.js backend
+            console.log("Fetching dynamic election schedule from backend...");
+
+            // Call the backend API endpoint
             const response = await fetch('http://localhost:3000/api/election-data');
-            
+
+            // Throw if the server responded with an error
             if (!response.ok) {
-                throw new Error("Backend responded with an error status.");
+                throw new Error("Backend responded with status " + response.status);
             }
-            
+
+            // Parse and return the JSON data
             const data = await response.json();
-            console.log("Dynamic Data Fetched successfully:", data);
+            console.log("Dynamic election data loaded:", data);
             return data;
-            
+
         } catch (error) {
-            console.warn("Dynamic Fetching failed (is your backend running?), falling back to static data:", error.message);
+            // If backend is offline or errored, use the static fallback
+            console.warn("Backend unavailable, using static fallback:", error.message);
             return staticElectionData;
         }
     }
 
+    // Public API — single method to get election data
     return {
         getElectionData: async function() {
-            return await fetchFromECI();
+            return await fetchFromBackend();
         }
     };
 })();
