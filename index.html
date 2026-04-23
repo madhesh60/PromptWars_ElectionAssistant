@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceVote - Indian Election Assistant</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="logo">
+            <span class="logo-icon">🗳️</span>
+            <h1>VoiceVote</h1>
+        </div>
+        <p class="tagline">Your smart Indian election guide.</p>
+    </header>
+
+    <main class="app-container">
+        
+        <!-- Top Section: Voice and Chat -->
+        <section class="interaction-grid">
+            
+            <!-- Voice Assistant Hero -->
+            <div class="card hero-voice">
+                <h2>Voice Assistant</h2>
+                <p>Tap the microphone and ask any question about the elections.</p>
+                
+                <div class="mic-container">
+                    <button id="mic-btn" class="mic-btn" aria-label="Start Voice Input">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mic-icon"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
+                    </button>
+                    <div class="ripple"></div>
+                </div>
+                <div id="voice-status" class="status-text">Ready to listen...</div>
+                <div id="voice-transcript" class="transcript-box hidden"></div>
+            </div>
+
+            <!-- Chat Assistant -->
+            <div class="card chat-panel">
+                <h2>Chat Assistant</h2>
+                <div class="chat-history" id="chat-history">
+                    <div class="message assistant">
+                        <div class="avatar">🤖</div>
+                        <div class="bubble">Namaste! I am your VoiceVote assistant. How can I help you with the upcoming elections?</div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Type your question here..." aria-label="Chat input">
+                    <button id="chat-send-btn" aria-label="Send message">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Informational Section: Video & Timeline -->
+        <section class="info-section">
+            <div class="card video-container">
+                <h2>How to Vote</h2>
+                <div class="video-wrapper">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/P-Y3oM19Q18" title="Election Process" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="card timeline-container">
+                <h2>Election Timeline</h2>
+                <p>Scroll or drag to view the upcoming phases. Click a node for details.</p>
+                <div id="three-canvas-container" class="canvas-wrapper">
+                    <!-- Three.js timeline renders here -->
+                </div>
+                <div id="timeline-details" class="timeline-details hidden">
+                    <h3 id="phase-title">Phase Name</h3>
+                    <p id="phase-date">Date: </p>
+                    <p id="phase-desc">Description of what happens.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agentic Reminders -->
+        <section class="reminders-section">
+            <div class="card agent-panel">
+                <h2>Never Miss a Date</h2>
+                <p>Allow notifications to receive automatic alerts 1 day before registration ends, before polling day, and on result day.</p>
+                
+                <div class="reminder-actions">
+                    <button id="enable-notifications" class="btn primary-btn">Enable Push Notifications</button>
+                    <button id="export-calendar" class="btn secondary-btn">Export to Google Calendar</button>
+                </div>
+                <div id="agent-status" class="status-text mt-2"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="app-footer">
+        <p>Built with ❤️ for Indian Citizens. Information sourced from ECI.</p>
+    </footer>
+
+    <!-- Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP for smooth animations (optional but recommended for Three.js interactions) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- App Scripts -->
+    <script src="scraper/eci_fetcher.js"></script>
+    <script src="voice.js"></script>
+    <script src="chat.js"></script>
+    <script src="agent.js"></script>
+    <script src="timeline/three_timeline.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
