@@ -38,6 +38,10 @@
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a.5.5 0 0 1 .5.5v6h6l.1.01a.5.5 0 0 1 0 .98l-.1.01h-6v6a.5.5 0 0 1-1 0v-6h-6a.5.5 0 0 1 0-1h6v-6A.5.5 0 0 1 10 3"></path></svg>
                     <span>Reminders</span>
                 </a>
+                <a href="#" class="nav-item" id="nav-learn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    <span>How India Votes</span>
+                </a>
             </nav>
 
             <div class="sidebar-footer">
@@ -140,6 +144,39 @@
                 </div>
             </div>
 
+            <!-- View: Learn (Video) -->
+            <div id="view-learn" class="view-section learn-view" style="display: none;">
+                <div class="learn-header">
+                    <h2>How India Votes</h2>
+                    <p>Watch this short explainer to understand the Indian election process</p>
+                </div>
+
+                <div class="video-card">
+                    <video id="learn-video" controls preload="metadata" poster="">
+                        <source src="assets/How_India_Votes.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <div class="video-info-cards">
+                    <div class="info-card">
+                        <div class="info-icon">🗳️</div>
+                        <h4>World's Largest Democracy</h4>
+                        <p>India conducts the largest democratic exercise on earth, with over 960 million eligible voters.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">📋</div>
+                        <h4>Multi-Phase Voting</h4>
+                        <p>Elections are held in multiple phases across weeks to manage logistics and ensure security.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">🔒</div>
+                        <h4>EVM & VVPAT</h4>
+                        <p>India uses Electronic Voting Machines with paper trail verification for transparent counting.</p>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -159,6 +196,7 @@
         document.getElementById('nav-chat').addEventListener('click', () => switchView('chat'));
         document.getElementById('nav-timeline').addEventListener('click', () => switchView('timeline'));
         document.getElementById('nav-reminders').addEventListener('click', () => switchView('reminders'));
+        document.getElementById('nav-learn').addEventListener('click', () => switchView('learn'));
 
         function switchView(viewId) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -169,8 +207,13 @@
             
             // Refresh Three.js canvas size if timeline is opened
             if (viewId === 'timeline' && window.TimelineRenderer && window.TimelineRenderer.refresh) {
-                // Give the browser a tiny bit of time to update DOM layout display: flex
                 setTimeout(() => window.TimelineRenderer.refresh(), 10);
+            }
+
+            // Pause video when leaving the Learn tab
+            if (viewId !== 'learn') {
+                const vid = document.getElementById('learn-video');
+                if (vid) vid.pause();
             }
         }
     </script>
