@@ -93,30 +93,33 @@
             </div>
 
             <!-- View: Timeline -->
-            <div id="view-timeline" class="view-section" style="display: none;">
+            <div id="view-timeline" class="view-section timeline-view" style="display: none;">
                 <div class="timeline-header">
                     <h2>Election Timeline</h2>
-                    <p>Explore the phases of the upcoming election.</p>
+                    <p>Track the phases of the Indian General Elections</p>
                 </div>
                 
-                <div class="timeline-layout">
-                    <div class="timeline-visuals">
-                        <div id="three-canvas-container" class="canvas-wrapper"></div>
-                        <div id="timeline-details" class="timeline-details hidden">
-                            <h3 id="phase-title"></h3>
-                            <p id="phase-date"></p>
-                            <p id="phase-desc"></p>
+                <!-- 3D Canvas -->
+                <div id="three-canvas-container" class="canvas-wrapper"></div>
+                
+                <!-- Phase detail popup -->
+                <div id="timeline-details" class="timeline-details hidden">
+                    <h3 id="phase-title"></h3>
+                    <p id="phase-date"></p>
+                    <p id="phase-desc"></p>
+                </div>
+
+                <!-- Checklist Section -->
+                <div class="checklist-section">
+                    <div class="checklist-section-header">
+                        <div class="checklist-title-group">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                            <h3>Election Checklist</h3>
                         </div>
+                        <span class="checklist-badge" id="checklist-progress">0 / 0</span>
                     </div>
-                    
-                    <div class="timeline-checklist">
-                        <div class="checklist-header">
-                            <h3>Action Checklist</h3>
-                            <p class="subtitle">Tick off completed phases</p>
-                        </div>
-                        <div id="checklist-container" class="checklist-items">
-                            <!-- Populated by JS -->
-                        </div>
+                    <div id="checklist-container" class="checklist-items">
+                        <!-- Populated dynamically by JS -->
                     </div>
                 </div>
             </div>

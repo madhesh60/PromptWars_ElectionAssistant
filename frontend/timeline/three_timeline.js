@@ -98,37 +98,61 @@ window.TimelineRenderer = (function() {
 
     function renderChecklist() {
         const checklistContainer = document.getElementById('checklist-container');
+        const progressBadge = document.getElementById('checklist-progress');
         if (!checklistContainer || !electionDataRef) return;
         
         checklistContainer.innerHTML = '';
         
+        function updateProgress() {
+            const total = electionDataRef.length;
+            let checked = 0;
+            electionDataRef.forEach(ev => {
+                if (localStorage.getItem('chk-' + ev.id) === 'true') checked++;
+            });
+            if (progressBadge) progressBadge.textContent = checked + ' / ' + total + ' done';
+        }
+        
         electionDataRef.forEach(event => {
             const itemId = 'chk-' + event.id;
             const savedState = localStorage.getItem(itemId) === 'true';
+            const isPast = new Date() > new Date(event.timestamp);
             
             const itemDiv = document.createElement('div');
             itemDiv.className = 'checklist-item' + (savedState ? ' completed' : '');
+            
+            const statusClass = savedState ? 'done' : 'upcoming';
+            const statusLabel = savedState ? 'Done' : (isPast ? 'Passed' : 'Upcoming');
             
             itemDiv.innerHTML = `
                 <input type="checkbox" id="${itemId}" ${savedState ? 'checked' : ''}>
                 <div class="checklist-info">
                     <h4>${event.phase}</h4>
-                    <p>${event.date} - ${event.description}</p>
+                    <span class="checklist-date">${event.date}</span>
+                    <p class="checklist-desc">${event.description}</p>
                 </div>
+                <span class="checklist-status ${statusClass}">${statusLabel}</span>
             `;
             
             const checkbox = itemDiv.querySelector('input');
             checkbox.addEventListener('change', (e) => {
                 localStorage.setItem(itemId, e.target.checked);
+                const statusSpan = itemDiv.querySelector('.checklist-status');
                 if (e.target.checked) {
                     itemDiv.classList.add('completed');
+                    statusSpan.className = 'checklist-status done';
+                    statusSpan.textContent = 'Done';
                 } else {
                     itemDiv.classList.remove('completed');
+                    statusSpan.className = 'checklist-status upcoming';
+                    statusSpan.textContent = isPast ? 'Passed' : 'Upcoming';
                 }
+                updateProgress();
             });
             
             checklistContainer.appendChild(itemDiv);
         });
+        
+        updateProgress();
     }
 
     function buildTimelineObjects() {
