@@ -9,21 +9,29 @@ window.ChatAssistant = (function() {
     const chatHistory = document.getElementById('chat-history');
     const chatInput = document.getElementById('chat-input');
     const chatSendBtn = document.getElementById('chat-send-btn');
+    const welcomeMsg = document.getElementById('welcome-message');
 
-    // System prompt for Gemini
     const systemPrompt = `You are VoiceVote, a friendly and helpful Indian Election Assistant. 
     Provide clear, accurate, and structured answers about the election process, voting steps, and general voter information in India. 
     Use markdown if needed for readability. Be friendly but professional.`;
 
-    // Internal chat history to send context to Gemini
     let conversationContext = [];
 
     function init(config) {
         _config = config;
         
         chatSendBtn.addEventListener('click', handleSend);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSend();
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+
+        // Auto-resize textarea
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight < 200 ? this.scrollHeight : 200) + 'px';
         });
     }
 
@@ -31,11 +39,13 @@ window.ChatAssistant = (function() {
         const text = chatInput.value.trim();
         if (!text) return;
 
-        // Add user message to UI
+        // Hide welcome message
+        if (welcomeMsg) welcomeMsg.style.display = 'none';
+
         addMessageToUI('user', text);
         chatInput.value = '';
+        chatInput.style.height = 'auto'; // reset height
         
-        // Add loading state
         const loadingId = addMessageToUI('assistant', 'Thinking...');
 
         try {
@@ -51,24 +61,17 @@ window.ChatAssistant = (function() {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${sender}`;
         
-        const avatar = document.createElement('div');
-        avatar.className = 'avatar';
-        avatar.innerText = sender === 'assistant' ? '🤖' : '👤';
+        let contentHtml = '';
+        if (sender === 'assistant') {
+            contentHtml = `<div class="avatar">🤖</div><div class="bubble">${text}</div>`;
+        } else {
+            contentHtml = `<div class="bubble">${text}</div>`;
+        }
         
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        
-        // Very basic markdown parsing for bold and line breaks
-        let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        formattedText = formattedText.replace(/\n/g, '<br>');
-        bubble.innerHTML = formattedText;
-        
+        msgDiv.innerHTML = contentHtml;
         const msgId = 'msg-' + Date.now();
         msgDiv.id = msgId;
 
-        msgDiv.appendChild(avatar);
-        msgDiv.appendChild(bubble);
-        
         chatHistory.appendChild(msgDiv);
         chatHistory.scrollTop = chatHistory.scrollHeight;
         
@@ -94,10 +97,8 @@ window.ChatAssistant = (function() {
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         
-        // Append current query to context
         conversationContext.push({ role: "user", parts: [{ text: query }] });
 
-        // Build payload with system prompt included in the first user message (a common workaround if systemInstruction isn't fully supported or just keeping it simple)
         let contents = [];
         if (conversationContext.length === 1) {
              contents.push({
@@ -108,9 +109,7 @@ window.ChatAssistant = (function() {
              contents = [...conversationContext];
         }
 
-        const payload = {
-            contents: contents
-        };
+        const payload = { contents: contents };
 
         const response = await fetch(url, {
             method: 'POST',
@@ -122,10 +121,8 @@ window.ChatAssistant = (function() {
         
         if (data && data.candidates && data.candidates.length > 0) {
             const replyText = data.candidates[0].content.parts[0].text;
-            // Append assistant reply to context
             conversationContext.push({ role: "model", parts: [{ text: replyText }] });
             
-            // Keep context size manageable (last 10 messages)
             if (conversationContext.length > 10) {
                 conversationContext = conversationContext.slice(conversationContext.length - 10);
             }

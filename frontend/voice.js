@@ -11,9 +11,9 @@ window.VoiceAssistant = (function() {
 
     const micBtn = document.getElementById('mic-btn');
     const statusText = document.getElementById('voice-status');
-    const transcriptBox = document.getElementById('voice-transcript');
+    const chatHistory = document.getElementById('chat-history');
+    const welcomeMsg = document.getElementById('welcome-message');
 
-    // System prompt for Gemini
     const systemPrompt = `You are VoiceVote, a friendly, concise, and helpful Indian Election Assistant. 
     Provide clear, accurate, and short answers about the election process, voting steps, and general voter information in India. 
     Keep responses brief because they will be read aloud by a Text-to-Speech engine.`;
@@ -21,11 +21,10 @@ window.VoiceAssistant = (function() {
     function init(config) {
         _config = config;
         
-        // Check Web Speech API Support
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
-            statusText.innerText = "Speech recognition is not supported in this browser.";
-            micBtn.disabled = true;
+            if(statusText) statusText.innerText = "Speech recognition is not supported in this browser.";
+            if(micBtn) micBtn.disabled = true;
             return;
         }
 
@@ -38,7 +37,7 @@ window.VoiceAssistant = (function() {
             isListening = true;
             micBtn.classList.add('listening');
             statusText.innerText = "Listening...";
-            transcriptBox.classList.add('hidden');
+            statusText.style.display = 'block';
         };
 
         recognition.onspeechend = function() {
@@ -50,22 +49,28 @@ window.VoiceAssistant = (function() {
 
         recognition.onresult = async function(event) {
             const transcript = event.results[0][0].transcript;
-            transcriptBox.innerText = `You asked: "${transcript}"`;
-            transcriptBox.classList.remove('hidden');
+            
+            // Hide welcome message
+            if (welcomeMsg) welcomeMsg.style.display = 'none';
+            
+            // Show User Message
+            addMessageToUI('user', transcript);
+            
             statusText.innerText = "Thinking...";
+            const loadingId = addMessageToUI('assistant', 'Thinking...');
             
             try {
-                // 1. Get Answer from Gemini
                 const answerText = await askGemini(transcript);
+                updateMessageUI(loadingId, answerText);
                 
-                // 2. Play Audio using Google TTS
                 statusText.innerText = "Speaking...";
                 await playTTS(answerText);
-                statusText.innerText = "Ready to listen...";
+                statusText.style.display = 'none';
                 
             } catch (error) {
                 console.error("Error in voice flow:", error);
-                statusText.innerText = "Sorry, there was an error processing your request.";
+                updateMessageUI(loadingId, "Sorry, there was an error processing your request.");
+                statusText.style.display = 'none';
             }
         };
 
@@ -73,6 +78,7 @@ window.VoiceAssistant = (function() {
             isListening = false;
             micBtn.classList.remove('listening');
             statusText.innerText = `Error: ${event.error}`;
+            setTimeout(() => statusText.style.display = 'none', 3000);
         };
 
         micBtn.addEventListener('click', toggleListening);
@@ -80,17 +86,45 @@ window.VoiceAssistant = (function() {
 
     function toggleListening() {
         if (!recognition) return;
-        
-        // Stop any currently playing audio
         if (audio && !audio.paused) {
             audio.pause();
         }
-
         if (isListening) {
             recognition.stop();
         } else {
             recognition.start();
         }
+    }
+
+    function addMessageToUI(sender, text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        
+        let contentHtml = '';
+        if (sender === 'assistant') {
+            contentHtml = `<div class="avatar">🤖</div><div class="bubble">${text}</div>`;
+        } else {
+            contentHtml = `<div class="bubble">${text}</div>`;
+        }
+        
+        msgDiv.innerHTML = contentHtml;
+        const msgId = 'msg-' + Date.now() + Math.random().toString(36).substr(2, 5);
+        msgDiv.id = msgId;
+
+        chatHistory.appendChild(msgDiv);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        return msgId;
+    }
+
+    function updateMessageUI(msgId, newText) {
+        const msgDiv = document.getElementById(msgId);
+        if (msgDiv) {
+            const bubble = msgDiv.querySelector('.bubble');
+            let formattedText = newText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            formattedText = formattedText.replace(/\n/g, '<br>');
+            bubble.innerHTML = formattedText;
+        }
+        chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
     async function askGemini(query) {
@@ -100,14 +134,8 @@ window.VoiceAssistant = (function() {
         }
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-        
         const payload = {
-            contents: [
-                {
-                    role: "user",
-                    parts: [{ text: systemPrompt + "\n\nUser Question: " + query }]
-                }
-            ]
+            contents: [{ role: "user", parts: [{ text: systemPrompt + "\n\nUser Question: " + query }] }]
         };
 
         const response = await fetch(url, {
@@ -125,15 +153,9 @@ window.VoiceAssistant = (function() {
 
     async function playTTS(text) {
         const apiKey = _config.googleTtsApiKey;
-        if (!apiKey || apiKey === 'REPLACE_WITH_YOUR_GOOGLE_TTS_KEY') {
-            console.warn("Google TTS API key not configured. Logging answer instead.");
-            console.log("Answer:", text);
-            return;
-        }
+        if (!apiKey || apiKey === 'REPLACE_WITH_YOUR_GOOGLE_TTS_KEY') return;
 
         const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
-        
-        // Clean text of markdown for speech
         const cleanText = text.replace(/[*_#`]/g, '');
 
         const payload = {
@@ -153,8 +175,6 @@ window.VoiceAssistant = (function() {
             const audioSrc = "data:audio/mp3;base64," + data.audioContent;
             audio = new Audio(audioSrc);
             await audio.play();
-        } else {
-            throw new Error("Failed to get audio from Google TTS");
         }
     }
 
