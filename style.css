@@ -1,0 +1,483 @@
+/* style.css - Premium Minimalist Design for VoiceVote */
+
+:root {
+    /* Color Palette */
+    --bg-main: #FAFAFA;
+    --surface-white: #FFFFFF;
+    --text-primary: #1A1A24;
+    --text-secondary: #5E6278;
+    
+    --accent-blue: #0A66C2;
+    --accent-blue-light: #E8F3FF;
+    --accent-blue-hover: #0855A1;
+    
+    --border-light: rgba(0, 0, 0, 0.08);
+    --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.04);
+    --shadow-hover: 0 12px 40px rgba(10, 102, 194, 0.1);
+    
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 8px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* Header */
+.app-header {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    background: linear-gradient(to bottom, #FFFFFF 0%, rgba(255,255,255,0) 100%);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.logo-icon {
+    font-size: 2.5rem;
+}
+
+.app-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, #1A1A24, #4A4A68);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tagline {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* Layout Containers */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.interaction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+}
+
+.info-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+/* Cards */
+.card {
+    background: var(--surface-white);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border-light);
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+}
+
+.card p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+/* Voice Assistant */
+.hero-voice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    min-height: 400px;
+    background: linear-gradient(145deg, #FFFFFF, var(--accent-blue-light));
+}
+
+.mic-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.mic-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(10, 102, 194, 0.3);
+}
+
+.mic-btn .mic-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.mic-btn:hover {
+    transform: scale(1.05);
+    background: var(--accent-blue-hover);
+}
+
+.mic-btn.listening {
+    animation: pulse-mic 1.5s infinite;
+    background: #E53935;
+    box-shadow: 0 8px 24px rgba(229, 57, 53, 0.4);
+}
+
+.ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(10, 102, 194, 0.2);
+    z-index: 1;
+    opacity: 0;
+}
+
+.mic-btn.listening ~ .ripple {
+    animation: ripple-effect 2s infinite;
+    background: rgba(229, 57, 53, 0.2);
+}
+
+@keyframes pulse-mic {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes ripple-effect {
+    0% { width: 80px; height: 80px; opacity: 1; }
+    100% { width: 200px; height: 200px; opacity: 0; }
+}
+
+.status-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--accent-blue);
+    min-height: 20px;
+}
+
+.transcript-box {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    max-width: 100%;
+    backdrop-filter: blur(10px);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Chat Assistant */
+.chat-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+}
+
+.chat-history {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.chat-history::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-history::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+.message {
+    display: flex;
+    gap: 12px;
+    max-width: 85%;
+}
+
+.message.assistant {
+    align-self: flex-start;
+}
+
+.message.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent-blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.message.user .avatar {
+    background: #F0F0F0;
+}
+
+.message .bubble {
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.message.assistant .bubble {
+    background: var(--accent-blue-light);
+    color: var(--text-primary);
+    border-top-left-radius: 4px;
+}
+
+.message.user .bubble {
+    background: var(--accent-blue);
+    color: white;
+    border-top-right-radius: 4px;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 12px;
+    background: var(--bg-main);
+    padding: 8px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+}
+
+.chat-input-area input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    outline: none;
+    font-family: inherit;
+    color: var(--text-primary);
+}
+
+.chat-input-area button {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.chat-input-area button:hover {
+    background: var(--accent-blue-hover);
+}
+
+.chat-input-area button svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Video Section */
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-md);
+}
+
+/* Timeline Section */
+.timeline-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.canvas-wrapper {
+    flex: 1;
+    min-height: 250px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+}
+
+.canvas-wrapper:active {
+    cursor: grabbing;
+}
+
+.timeline-details {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: var(--accent-blue-light);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent-blue);
+    animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.timeline-details h3 {
+    color: var(--accent-blue);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-details #phase-date {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+/* Agentic Reminders Section */
+.agent-panel {
+    text-align: center;
+    background: linear-gradient(135deg, #FFFFFF, #F5F8FA);
+}
+
+.reminder-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    border: none;
+    font-family: inherit;
+}
+
+.primary-btn {
+    background: var(--accent-blue);
+    color: white;
+    box-shadow: 0 4px 14px rgba(10, 102, 194, 0.2);
+}
+
+.primary-btn:hover {
+    background: var(--accent-blue-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(10, 102, 194, 0.3);
+}
+
+.secondary-btn {
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid var(--border-light);
+}
+
+.secondary-btn:hover {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+}
+
+.mt-2 {
+    margin-top: 1rem;
+}
+
+/* Footer */
+.app-footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .interaction-grid {
+        grid-template-columns: 1fr;
+    }
+    .info-section {
+        grid-template-columns: 1fr;
+    }
+}
