@@ -23,8 +23,7 @@ window.TimelineRenderer = (function() {
         
         // Scene Setup
         scene = new THREE.Scene();
-        // background color similar to the gradient in css
-        scene.background = new THREE.Color(0xF8FAFC); 
+        scene.background = null; // Transparent to match CSS dark theme
 
         // Camera Setup
         const width = container.clientWidth;
@@ -35,7 +34,7 @@ window.TimelineRenderer = (function() {
         camera.lookAt(0, 0, 0);
 
         // Renderer Setup
-        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(width, height);
         renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
@@ -140,7 +139,7 @@ window.TimelineRenderer = (function() {
         const startX = -((count - 1) * spacing) / 2;
 
         // Line connecting nodes
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xCBD5E1, linewidth: 2 });
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 2 });
         const points = [];
         points.push(new THREE.Vector3(startX - 2, 0, 0));
         points.push(new THREE.Vector3(startX + (count - 1) * spacing + 2, 0, 0));
