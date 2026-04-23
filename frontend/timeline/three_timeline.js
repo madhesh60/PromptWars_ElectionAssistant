@@ -71,6 +71,9 @@ window.TimelineRenderer = (function() {
 
         // Build Timeline
         buildTimelineObjects();
+        
+        // Render Checklist UI
+        renderChecklist();
 
         // Event Listeners
         window.addEventListener('resize', onWindowResize);
@@ -92,6 +95,41 @@ window.TimelineRenderer = (function() {
                 });
             });
         }
+    }
+
+    function renderChecklist() {
+        const checklistContainer = document.getElementById('checklist-container');
+        if (!checklistContainer || !electionDataRef) return;
+        
+        checklistContainer.innerHTML = '';
+        
+        electionDataRef.forEach(event => {
+            const itemId = 'chk-' + event.id;
+            const savedState = localStorage.getItem(itemId) === 'true';
+            
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'checklist-item' + (savedState ? ' completed' : '');
+            
+            itemDiv.innerHTML = `
+                <input type="checkbox" id="${itemId}" ${savedState ? 'checked' : ''}>
+                <div class="checklist-info">
+                    <h4>${event.phase}</h4>
+                    <p>${event.date} - ${event.description}</p>
+                </div>
+            `;
+            
+            const checkbox = itemDiv.querySelector('input');
+            checkbox.addEventListener('change', (e) => {
+                localStorage.setItem(itemId, e.target.checked);
+                if (e.target.checked) {
+                    itemDiv.classList.add('completed');
+                } else {
+                    itemDiv.classList.remove('completed');
+                }
+            });
+            
+            checklistContainer.appendChild(itemDiv);
+        });
     }
 
     function buildTimelineObjects() {
