@@ -6,7 +6,7 @@
 
 window.ManifestoParser = (function() {
     // Backend vision API endpoint
-    const VISION_API = 'https://prompt-wars-election-assistant-xqq4.vercel.app/api/gemini-vision';
+    const VISION_API = 'http://localhost:3000/api/gemini-vision';
 
     // All extracted promises from the PDF
     let allPromises = [];

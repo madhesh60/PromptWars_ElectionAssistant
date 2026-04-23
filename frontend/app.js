@@ -12,7 +12,7 @@ let CONFIG = {
 // Fetch API keys from the backend server instead of hardcoding in the frontend
 async function loadConfig() {
     try {
-        const response = await fetch('https://prompt-wars-election-assistant-xqq4.vercel.app/api/config');
+        const response = await fetch('http://localhost:3000/api/config');
         if (response.ok) {
             CONFIG = await response.json();
             console.log("Config loaded from backend.");

@@ -5,8 +5,8 @@
  */
 
 window.FeatureTools = (function() {
-    // Backend API URL — deployed on Vercel
-    const API_URL = 'https://prompt-wars-election-assistant-xqq4.vercel.app/api/gemini';
+    // Backend API URL
+    const API_URL = 'http://localhost:3000/api/gemini';
 
     // ──────────────────────────────────────────────
     // HELPER: Send a prompt to the Gemini backend and return the text response
