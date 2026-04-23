@@ -1,7 +1,7 @@
-/* style.css - Claude-inspired Dark Theme for VoiceVote */
+/* style.css - Dark Theme for VoiceVote Election Assistant */
 
 :root {
-    /* Claude Dark Theme Colors */
+    /* VoiceVote Dark Theme Colors */
     --bg-base: hsl(60, 2%, 9%); /* Very dark grey */
     --bg-surface: hsl(60, 2%, 12%);
     --bg-hover: hsl(60, 2%, 18%);
@@ -13,7 +13,7 @@
     --border-light: rgba(255, 255, 255, 0.1);
     --border-hover: rgba(255, 255, 255, 0.2);
     
-    --accent: #CC7B5E; /* Claude's subtle brand color / or use blue as originally requested but Claude is more neutral */
+    --accent: #CC7B5E; /* Warm accent color */
     --accent-blue: #0A66C2;
     
     --radius-lg: 20px;
