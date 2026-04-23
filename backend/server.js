@@ -10,6 +10,14 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key'); // replace dummy later or rely on env
 
+// Endpoint to expose API keys to the frontend (for local dev purposes only)
+app.get('/api/config', (req, res) => {
+    res.json({
+        geminiApiKey: process.env.GEMINI_API_KEY || '',
+        googleTtsApiKey: process.env.GOOGLE_TTS_API_KEY || '',
+    });
+});
+
 // System prompt to fetch actual dates using Gemini's knowledge/tools (simulated search)
 // We'll instruct Gemini to output JSON for the timeline
 app.get('/api/election-data', async (req, res) => {
