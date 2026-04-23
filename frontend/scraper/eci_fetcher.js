@@ -47,19 +47,21 @@ window.ECIFetcher = (function() {
 
     async function fetchFromECI() {
         try {
-            // Attempt to fetch from ECI (would normally require a CORS proxy)
-            // e.g., const res = await fetch('https://corsproxy.io/?https://eci.gov.in/schedule');
-            // If it fails or CORS blocks, we fall back to static data.
-            console.log("Attempting to scrape ECI website...");
+            console.log("Fetching dynamic 2024 Election schedule from Gemini API Backend...");
             
-            // Simulating network delay
-            await new Promise(resolve => setTimeout(resolve, 800));
+            // Call our Node.js backend
+            const response = await fetch('http://localhost:3000/api/election-data');
             
-            // Simulating CORS/Block failure to default to hardcoded dataset
-            throw new Error("CORS blocked or scraping prevented by ECI firewall.");
+            if (!response.ok) {
+                throw new Error("Backend responded with an error status.");
+            }
+            
+            const data = await response.json();
+            console.log("Dynamic Data Fetched successfully:", data);
+            return data;
             
         } catch (error) {
-            console.warn("ECI Scraping failed, falling back to static data:", error.message);
+            console.warn("Dynamic Fetching failed (is your backend running?), falling back to static data:", error.message);
             return staticElectionData;
         }
     }
