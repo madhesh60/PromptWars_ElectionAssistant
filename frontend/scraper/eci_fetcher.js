@@ -71,7 +71,7 @@ window.ECIFetcher = (function() {
             console.log("Fetching dynamic election schedule from backend...");
 
             // Call the backend API endpoint
-            const response = await fetch('http://localhost:3000/api/election-data');
+            const response = await fetch('https://prompt-wars-election-assistant-xqq4.vercel.app/api/election-data');
 
             // Throw if the server responded with an error
             if (!response.ok) {
