@@ -33,9 +33,9 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                     <span>Chat</span>
                 </a>
-                <a href="#" class="nav-item" id="nav-ballot">
+                <a href="#" class="nav-item" id="nav-analyzer">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                    <span>Explain My Ballot</span>
+                    <span>Policy & Manifesto Analyzer</span>
                 </a>
                 <a href="#" class="nav-item" id="nav-bias">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
@@ -48,10 +48,6 @@
                 <a href="#" class="nav-item" id="nav-constitution">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                     <span>Ask The Constitution</span>
-                </a>
-                <a href="#" class="nav-item" id="nav-manifesto">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    <span>Manifesto Parser</span>
                 </a>
                 <div class="nav-divider"></div>
                 <a href="#" class="nav-item" id="nav-timeline">
@@ -184,26 +180,66 @@
                 </div>
             </div>
 
-            <!-- View: Explain My Ballot -->
-            <div id="view-ballot" class="view-section tool-view" style="display: none;">
+            <!-- View: Policy & Manifesto Analyzer -->
+            <div id="view-analyzer" class="view-section tool-view manifesto-view" style="display: none;">
                 <div class="tool-header">
-                    <h2>📜 Explain My Ballot</h2>
-                    <p>Paste any election measure, policy, or party ideology — AI will break it down for you</p>
+                    <h2>📄 Policy & Manifesto Analyzer</h2>
+                    <p>Paste a policy snippet, or upload a party manifesto PDF to extract promises and explain the impact.</p>
                 </div>
-                <div class="tool-input-card">
-                    <textarea id="ballot-input" class="tool-textarea" placeholder="Paste the policy text or election measure here..." rows="6"></textarea>
-                    <div class="tool-actions">
-                        <div class="file-attach-group">
-                            <input type="file" id="ballot-file" accept=".txt,.pdf,.md,.csv,.doc,.docx" style="display:none">
-                            <button class="btn secondary-btn file-attach-btn" onclick="document.getElementById('ballot-file').click()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                                <span id="ballot-file-label">Attach file</span>
-                            </button>
+                
+                <!-- Tab toggle for mode -->
+                <div class="analyzer-tabs" style="display:flex; gap:10px; margin-bottom: 20px;">
+                    <button id="tab-quick" class="btn primary-btn" style="flex:1" onclick="document.getElementById('mode-quick').style.display='block'; document.getElementById('mode-deep').style.display='none'; this.classList.add('primary-btn'); this.classList.remove('secondary-btn'); document.getElementById('tab-deep').classList.add('secondary-btn'); document.getElementById('tab-deep').classList.remove('primary-btn');">Quick Policy Explain</button>
+                    <button id="tab-deep" class="btn secondary-btn" style="flex:1" onclick="document.getElementById('mode-deep').style.display='block'; document.getElementById('mode-quick').style.display='none'; this.classList.add('primary-btn'); this.classList.remove('secondary-btn'); document.getElementById('tab-quick').classList.add('secondary-btn'); document.getElementById('tab-quick').classList.remove('primary-btn');">Deep Manifesto Parse (PDF)</button>
+                </div>
+
+                <!-- Quick Explain Mode -->
+                <div id="mode-quick" style="display:block;">
+                    <div class="tool-input-card">
+                        <textarea id="ballot-input" class="tool-textarea" placeholder="Paste the policy text or election measure here..." rows="6"></textarea>
+                        <div class="tool-actions">
+                            <div class="file-attach-group">
+                                <input type="file" id="ballot-file" accept=".txt,.pdf,.md,.csv,.doc,.docx" style="display:none">
+                                <button class="btn secondary-btn file-attach-btn" onclick="document.getElementById('ballot-file').click()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                                    <span id="ballot-file-label">Attach file</span>
+                                </button>
+                            </div>
+                            <button id="ballot-submit" class="btn primary-btn">Analyze Policy</button>
                         </div>
-                        <button id="ballot-submit" class="btn primary-btn">Analyze Policy</button>
                     </div>
+                    <div id="ballot-output" class="tool-output"></div>
                 </div>
-                <div id="ballot-output" class="tool-output"></div>
+
+                <!-- Deep Parse Mode -->
+                <div id="mode-deep" style="display:none;">
+                    <div class="manifesto-upload-card">
+                        <input type="file" id="manifesto-file" accept=".pdf" style="display:none">
+                        <div class="upload-zone" id="manifesto-upload-btn">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <p>Click to upload a manifesto PDF</p>
+                            <span class="upload-hint">Supports .pdf files up to 50MB</span>
+                        </div>
+                        <span id="manifesto-file-name" class="file-name-tag" style="display:none"></span>
+                        <button id="manifesto-parse-btn" class="btn primary-btn" disabled style="margin-top:12px;width:100%">
+                            🔍 Parse Manifesto with AI
+                        </button>
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div id="manifesto-progress" class="manifesto-progress" style="display:none">
+                        <div class="progress-track">
+                            <div class="progress-fill" id="manifesto-progress-bar" style="width:0%"></div>
+                        </div>
+                        <p id="manifesto-progress-text" class="progress-text">Starting analysis...</p>
+                    </div>
+
+                    <!-- Filter Buttons -->
+                    <div id="manifesto-filters" class="manifesto-filters" style="display:none"></div>
+
+                    <!-- Promise Cards Grid -->
+                    <div id="manifesto-output" class="promise-grid"></div>
+                </div>
             </div>
 
             <!-- View: Bias Detector -->
@@ -249,42 +285,6 @@
                 </div>
             </div>
 
-            <!-- View: Manifesto Parser -->
-            <div id="view-manifesto" class="view-section tool-view manifesto-view" style="display: none;">
-                <div class="tool-header">
-                    <h2>📄 Manifesto Parser</h2>
-                    <p>Upload a party manifesto PDF — AI extracts every promise, policy, and budget figure</p>
-                </div>
-
-                <!-- Upload Area -->
-                <div class="manifesto-upload-card">
-                    <input type="file" id="manifesto-file" accept=".pdf" style="display:none">
-                    <div class="upload-zone" id="manifesto-upload-btn">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                        <p>Click to upload a manifesto PDF</p>
-                        <span class="upload-hint">Supports .pdf files up to 50MB</span>
-                    </div>
-                    <span id="manifesto-file-name" class="file-name-tag" style="display:none"></span>
-                    <button id="manifesto-parse-btn" class="btn primary-btn" disabled style="margin-top:12px;width:100%">
-                        🔍 Parse Manifesto with AI
-                    </button>
-                </div>
-
-                <!-- Progress Bar -->
-                <div id="manifesto-progress" class="manifesto-progress" style="display:none">
-                    <div class="progress-track">
-                        <div class="progress-fill" id="manifesto-progress-bar" style="width:0%"></div>
-                    </div>
-                    <p id="manifesto-progress-text" class="progress-text">Starting analysis...</p>
-                </div>
-
-                <!-- Filter Buttons -->
-                <div id="manifesto-filters" class="manifesto-filters" style="display:none"></div>
-
-                <!-- Promise Cards Grid -->
-                <div id="manifesto-output" class="promise-grid"></div>
-            </div>
-
         </main>
     </div>
 
@@ -305,7 +305,7 @@
     <!-- View Navigation + File Upload Script -->
     <script>
         // Navigation for all views
-        const navIds = ['chat','ballot','bias','rep','constitution','manifesto','timeline','reminders','learn'];
+        const navIds = ['chat','analyzer','bias','rep','constitution','timeline','reminders','learn'];
         navIds.forEach(id => {
             document.getElementById('nav-' + id).addEventListener('click', () => switchView(id));
         });
