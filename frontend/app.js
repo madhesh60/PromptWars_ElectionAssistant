@@ -65,4 +65,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (window.FeatureTools) {
         window.FeatureTools.init();
     }
+
+    // Step 8: Initialize Manifesto Parser (PDF → Gemini Vision → Promise Cards)
+    if (window.ManifestoParser) {
+        window.ManifestoParser.init();
+    }
 });

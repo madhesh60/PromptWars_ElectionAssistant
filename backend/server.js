@@ -12,8 +12,8 @@ const app = express();
 // Enable CORS so the frontend (different port) can talk to this server
 app.use(cors());
 
-// Parse incoming JSON request bodies (up to 10MB for file attachments)
-app.use(express.json({ limit: '10mb' }));
+// Parse incoming JSON request bodies (up to 50MB for PDF page images)
+app.use(express.json({ limit: '50mb' }));
 
 // Server port — defaults to 3000 if not set in .env
 const PORT = process.env.PORT || 3000;
@@ -54,27 +54,21 @@ app.get('/api/election-data', async (req, res) => {
 });
 
 // ──────────────────────────────────────────────
-// POST /api/gemini — General purpose Gemini proxy for all features
+// POST /api/gemini — General purpose Gemini text proxy
 // Body: { prompt: string, fileContent?: string, fileName?: string }
 // ──────────────────────────────────────────────
 app.post('/api/gemini', async (req, res) => {
     try {
         const { prompt, fileContent, fileName } = req.body;
-
-        // Validate that a prompt was provided
-        if (!prompt) {
-            return res.status(400).json({ error: "Prompt is required." });
-        }
+        if (!prompt) return res.status(400).json({ error: "Prompt is required." });
 
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-        // Build the full prompt — include file content if attached
         let fullPrompt = prompt;
         if (fileContent) {
             fullPrompt += `\n\n--- Attached File: ${fileName || 'document'} ---\n${fileContent}\n--- End of File ---`;
         }
 
-        // Send to Gemini and return the response text
         const result = await model.generateContent(fullPrompt);
         const text = result.response.text();
         res.json({ response: text });
@@ -82,6 +76,42 @@ app.post('/api/gemini', async (req, res) => {
     } catch (error) {
         console.error("Gemini Proxy Error:", error.message || error);
         res.status(500).json({ error: "Gemini request failed." });
+    }
+});
+
+// ──────────────────────────────────────────────
+// POST /api/gemini-vision — Gemini Vision for PDF page images
+// Body: { imageBase64: string, mimeType: string, prompt: string }
+// Accepts a base64-encoded image and sends it to Gemini Vision
+// ──────────────────────────────────────────────
+app.post('/api/gemini-vision', async (req, res) => {
+    try {
+        const { imageBase64, mimeType, prompt } = req.body;
+
+        // Validate required fields
+        if (!imageBase64 || !prompt) {
+            return res.status(400).json({ error: "imageBase64 and prompt are required." });
+        }
+
+        // Use Gemini 2.0 Flash which supports vision natively
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+        // Build the image part for multimodal input
+        const imagePart = {
+            inlineData: {
+                data: imageBase64,
+                mimeType: mimeType || 'image/png'
+            }
+        };
+
+        // Send both the text prompt and the image to Gemini
+        const result = await model.generateContent([prompt, imagePart]);
+        const text = result.response.text();
+        res.json({ response: text });
+
+    } catch (error) {
+        console.error("Gemini Vision Error:", error.message || error);
+        res.status(500).json({ error: "Gemini Vision request failed." });
     }
 });
 
