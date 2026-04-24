@@ -43,6 +43,7 @@ All answers are grounded in real data scraped from the Election Commission of In
 ### Real Data Source
 
 The app scrapes or fetches live data from:
+
 - `https://eci.gov.in` (Election Commission of India)
 - `https://voters.eci.gov.in` (Voter services portal)
 
@@ -76,6 +77,7 @@ This ensures dates, schedules, and steps are always accurate and up to date.
 ## 🔔 Agentic Reminder System
 
 The agent assistant:
+
 - Asks the user to allow push notifications on first visit
 - Stores key election dates (fetched from ECI data)
 - Fires reminders:
@@ -89,17 +91,17 @@ The agent assistant:
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | HTML, CSS, JavaScript (Vanilla or React) |
-| Voice Input | Web Speech API |
-| Voice Output | Google Text-to-Speech API |
-| Chat AI | Gemini API (Google AI Studio) |
-| Data Source | ECI website scraping (Cheerio / Puppeteer) or official open data |
-| Animations | Three.js |
-| Notifications | Web Push + Service Workers |
-| Hosting | GitHub Pages / Firebase Hosting |
-| Google Services | Gemini API, Google TTS, Google Calendar API |
+| Layer           | Technology                                                       |
+| --------------- | ---------------------------------------------------------------- |
+| Frontend        | HTML, CSS, JavaScript (Vanilla or React)                         |
+| Voice Input     | Web Speech API                                                   |
+| Voice Output    | Google Text-to-Speech API                                        |
+| Chat AI         | Gemini API (Google AI Studio)                                    |
+| Data Source     | ECI website scraping (Cheerio / Puppeteer) or official open data |
+| Animations      | Three.js                                                         |
+| Notifications   | Web Push + Service Workers                                       |
+| Hosting         | GitHub Pages / Firebase Hosting                                  |
+| Google Services | Gemini API, Google TTS, Google Calendar API                      |
 
 ---
 
@@ -144,12 +146,12 @@ The agent assistant:
 
 ## 🔗 Google Services Used
 
-| Google Service | How It Is Used |
-|---|---|
-| Gemini API | Powers the chat and voice Q&A responses |
-| Google Text-to-Speech | Reads answers aloud in voice mode |
-| Google Calendar API | Lets users export election reminders to their calendar |
-| Firebase Hosting | Hosts the final web app (optional) |
+| Google Service        | How It Is Used                                         |
+| --------------------- | ------------------------------------------------------ |
+| Gemini API            | Powers the chat and voice Q&A responses                |
+| Google Text-to-Speech | Reads answers aloud in voice mode                      |
+| Google Calendar API   | Lets users export election reminders to their calendar |
+| Firebase Hosting      | Hosts the final web app (optional)                     |
 
 ---
 
@@ -200,4 +202,4 @@ Indian citizens who want a simple, friendly way to understand elections — espe
 
 ---
 
-*Built with ❤️ for the Google Antigravity Hackathon*
+_Built with ❤️ for the Google Antigravity Hackathon_

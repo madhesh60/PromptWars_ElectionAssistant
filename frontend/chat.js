@@ -3,128 +3,136 @@
  * Handles the text-based Chat Assistant powered by the Gemini API.
  */
 
-window.ChatAssistant = (function() {
-    let _config = {};
-    
-    const chatHistory = document.getElementById('chat-history');
-    const chatInput = document.getElementById('chat-input');
-    const chatSendBtn = document.getElementById('chat-send-btn');
-    const welcomeMsg = document.getElementById('welcome-message');
+window.ChatAssistant = (function () {
+  let _config = {}
 
-    const systemPrompt = `You are VoiceVote, a friendly and helpful Indian Election Assistant. 
+  const chatHistory = document.getElementById('chat-history')
+  const chatInput = document.getElementById('chat-input')
+  const chatSendBtn = document.getElementById('chat-send-btn')
+  const welcomeMsg = document.getElementById('welcome-message')
+
+  const systemPrompt = `You are VoiceVote, a friendly and helpful Indian Election Assistant. 
     Provide clear, accurate, and structured answers about the election process, voting steps, and general voter information in India. 
-    Use markdown if needed for readability. Be friendly but professional.`;
+    Use markdown if needed for readability. Be friendly but professional.`
 
-    let conversationContext = [];
+  let conversationContext = []
 
-    function init(config) {
-        _config = config;
-        
-        chatSendBtn.addEventListener('click', handleSend);
-        chatInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-            }
-        });
+  function init(config) {
+    _config = config
 
-        // Auto-resize textarea
-        chatInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight < 200 ? this.scrollHeight : 200) + 'px';
-        });
+    chatSendBtn.addEventListener('click', handleSend)
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault()
+        handleSend()
+      }
+    })
+
+    // Auto-resize textarea
+    chatInput.addEventListener('input', function () {
+      this.style.height = 'auto'
+      this.style.height = `${this.scrollHeight < 200 ? this.scrollHeight : 200}px`
+    })
+  }
+
+  async function handleSend() {
+    const text = chatInput.value.trim()
+    if (!text) return
+
+    // Hide welcome message
+    if (welcomeMsg) welcomeMsg.style.display = 'none'
+
+    addMessageToUI('user', text)
+    chatInput.value = ''
+    chatInput.style.height = 'auto' // reset height
+
+    const loadingId = addMessageToUI('assistant', 'Thinking...')
+
+    try {
+      const response = await askGemini(text)
+      updateMessageUI(loadingId, response)
+    } catch (error) {
+      console.error('Chat error:', error)
+      updateMessageUI(
+        loadingId,
+        'Sorry, I am having trouble connecting right now. Please try again.',
+      )
+    }
+  }
+
+  function addMessageToUI(sender, text) {
+    const msgDiv = document.createElement('div')
+    msgDiv.className = `message ${sender}`
+
+    let contentHtml = ''
+    if (sender === 'assistant') {
+      contentHtml = `<div class="avatar">🤖</div><div class="bubble">${text}</div>`
+    } else {
+      contentHtml = `<div class="bubble">${text}</div>`
     }
 
-    async function handleSend() {
-        const text = chatInput.value.trim();
-        if (!text) return;
+    msgDiv.innerHTML = contentHtml
+    const msgId = `msg-${Date.now()}`
+    msgDiv.id = msgId
 
-        // Hide welcome message
-        if (welcomeMsg) welcomeMsg.style.display = 'none';
+    chatHistory.appendChild(msgDiv)
+    chatHistory.scrollTop = chatHistory.scrollHeight
 
-        addMessageToUI('user', text);
-        chatInput.value = '';
-        chatInput.style.height = 'auto'; // reset height
-        
-        const loadingId = addMessageToUI('assistant', 'Thinking...');
+    return msgId
+  }
 
-        try {
-            const response = await askGemini(text);
-            updateMessageUI(loadingId, response);
-        } catch (error) {
-            console.error("Chat error:", error);
-            updateMessageUI(loadingId, "Sorry, I am having trouble connecting right now. Please try again.");
-        }
+  function updateMessageUI(msgId, newText) {
+    const msgDiv = document.getElementById(msgId)
+    if (msgDiv) {
+      const bubble = msgDiv.querySelector('.bubble')
+      let formattedText = newText.replace(
+        /\*\*(.*?)\*\*/g,
+        '<strong>$1</strong>',
+      )
+      formattedText = formattedText.replace(/\n/g, '<br>')
+      bubble.innerHTML = formattedText
+    }
+    chatHistory.scrollTop = chatHistory.scrollHeight
+  }
+
+  async function askGemini(query) {
+    const url = `http://localhost:3000/api/chat`
+
+    conversationContext.push({ role: 'user', parts: [{ text: query }] })
+
+    let contents = []
+    if (conversationContext.length === 1) {
+      contents.push({
+        role: 'user',
+        parts: [{ text: `${systemPrompt}\n\n${query}` }],
+      })
+    } else {
+      contents = [...conversationContext]
     }
 
-    function addMessageToUI(sender, text) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${sender}`;
-        
-        let contentHtml = '';
-        if (sender === 'assistant') {
-            contentHtml = `<div class="avatar">🤖</div><div class="bubble">${text}</div>`;
-        } else {
-            contentHtml = `<div class="bubble">${text}</div>`;
-        }
-        
-        msgDiv.innerHTML = contentHtml;
-        const msgId = 'msg-' + Date.now();
-        msgDiv.id = msgId;
+    const payload = { contents }
 
-        chatHistory.appendChild(msgDiv);
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-        
-        return msgId;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+
+    const data = await response.json()
+
+    if (data && data.response) {
+      const replyText = data.response
+      conversationContext.push({ role: 'model', parts: [{ text: replyText }] })
+
+      if (conversationContext.length > 10) {
+        conversationContext = conversationContext.slice(
+          conversationContext.length - 10,
+        )
+      }
+      return replyText
     }
+    throw new Error('Failed to get response from Gemini')
+  }
 
-    function updateMessageUI(msgId, newText) {
-        const msgDiv = document.getElementById(msgId);
-        if (msgDiv) {
-            const bubble = msgDiv.querySelector('.bubble');
-            let formattedText = newText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            formattedText = formattedText.replace(/\n/g, '<br>');
-            bubble.innerHTML = formattedText;
-        }
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-    }
-
-    async function askGemini(query) {
-        const url = `http://localhost:3000/api/chat`;
-        
-        conversationContext.push({ role: "user", parts: [{ text: query }] });
-
-        let contents = [];
-        if (conversationContext.length === 1) {
-             contents.push({
-                 role: "user",
-                 parts: [{ text: systemPrompt + "\n\n" + query }]
-             });
-        } else {
-             contents = [...conversationContext];
-        }
-
-        const payload = { contents: contents };
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-        
-        if (data && data.response) {
-            const replyText = data.response;
-            conversationContext.push({ role: "model", parts: [{ text: replyText }] });
-            
-            if (conversationContext.length > 10) {
-                conversationContext = conversationContext.slice(conversationContext.length - 10);
-            }
-            return replyText;
-        }
-        throw new Error("Failed to get response from Gemini");
-    }
-
-    return { init };
-})();
+  return { init }
+})()
