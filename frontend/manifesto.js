@@ -13,15 +13,15 @@ window.ManifestoParser = (function () {
 
   // Category definitions with emojis and colors
   const CATEGORIES = {
-    healthcare: { label: 'Healthcare', emoji: '🏥', color: '#22c55e' },
-    education: { label: 'Education', emoji: '📚', color: '#3b82f6' },
-    economy: { label: 'Economy', emoji: '💰', color: '#f59e0b' },
-    infrastructure: { label: 'Infrastructure', emoji: '🏗️', color: '#8b5cf6' },
-    agriculture: { label: 'Agriculture', emoji: '🌾', color: '#10b981' },
-    defense: { label: 'Defense', emoji: '🛡️', color: '#ef4444' },
-    technology: { label: 'Technology', emoji: '💻', color: '#06b6d4' },
-    social: { label: 'Social Welfare', emoji: '🤝', color: '#ec4899' },
-    other: { label: 'Other', emoji: '📌', color: '#6b7280' },
+    healthcare: { label: 'Healthcare', emoji: '', color: '#22c55e' },
+    education: { label: 'Education', emoji: '', color: '#3b82f6' },
+    economy: { label: 'Economy', emoji: '', color: '#f59e0b' },
+    infrastructure: { label: 'Infrastructure', emoji: '', color: '#8b5cf6' },
+    agriculture: { label: 'Agriculture', emoji: '', color: '#10b981' },
+    defense: { label: 'Defense', emoji: '', color: '#ef4444' },
+    technology: { label: 'Technology', emoji: '', color: '#06b6d4' },
+    social: { label: 'Social Welfare', emoji: '', color: '#ec4899' },
+    other: { label: 'Other', emoji: '', color: '#6b7280' },
   }
 
   // ──────────────────────────────────────────────
@@ -255,13 +255,13 @@ If no promises are found on this page, return an empty array [].`
 
       card.innerHTML = `
                 <div class="promise-card-header">
-                    <span class="promise-category" style="background:${cat.color}20;color:${cat.color}">${cat.emoji} ${cat.label}</span>
+                    <span class="promise-category" style="background:${cat.color}20;color:${cat.color}">${cat.label}</span>
                     <span class="promise-page">Page ${p.page || '?'}</span>
                 </div>
                 <h4 class="promise-title">${p.promise || 'Untitled Promise'}</h4>
                 <p class="promise-desc">${p.description || ''}</p>
-                ${p.budget ? `<div class="promise-meta"><span class="meta-icon">💰</span> <strong>Budget:</strong> ${p.budget}</div>` : ''}
-                ${p.timeline ? `<div class="promise-meta"><span class="meta-icon">📅</span> <strong>Timeline:</strong> ${p.timeline}</div>` : ''}
+                ${p.budget ? `<div class="promise-meta"><span class="meta-icon"></span> <strong>Budget:</strong> ${p.budget}</div>` : ''}
+                ${p.timeline ? `<div class="promise-meta"><span class="meta-icon"></span> <strong>Timeline:</strong> ${p.timeline}</div>` : ''}
             `
       output.appendChild(card)
     })

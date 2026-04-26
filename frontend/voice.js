@@ -14,7 +14,7 @@ window.VoiceAssistant = (function () {
   const chatHistory = document.getElementById('chat-history')
   const welcomeMsg = document.getElementById('welcome-message')
 
-  const systemPrompt = `You are VoiceVote, a friendly, concise, and helpful Indian Election Assistant. 
+  const systemPrompt = `You are Electo, a friendly, concise, and formal Indian Election Assistant. 
     Provide clear, accurate, and short answers about the election process, voting steps, and general voter information in India. 
     Keep responses brief because they will be read aloud by a Text-to-Speech engine.`
 
@@ -107,7 +107,7 @@ window.VoiceAssistant = (function () {
 
     let contentHtml = ''
     if (sender === 'assistant') {
-      contentHtml = `<div class="avatar">🤖</div><div class="bubble">${text}</div>`
+      contentHtml = `<div class="avatar">AI</div><div class="bubble">${text}</div>`
     } else {
       contentHtml = `<div class="bubble">${text}</div>`
     }

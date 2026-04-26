@@ -3,7 +3,7 @@
  * Background worker for push notifications and offline caching capabilities.
  */
 
-const CACHE_NAME = 'voicevote-v1'
+const CACHE_NAME = 'electo-v1'
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -50,7 +50,7 @@ self.addEventListener('message', (event) => {
     // For demonstration, we will just show a notification immediately to prove it works.
     // A real implementation requires a backend to send push events at the right time.
 
-    self.registration.showNotification('VoiceVote Reminders Active', {
+    self.registration.showNotification('Electo Reminders Active', {
       body: 'You will be notified 1 day before key election events.',
       icon: 'https://cdn-icons-png.flaticon.com/512/8282/8282119.png', // Example ballot icon
       badge: 'https://cdn-icons-png.flaticon.com/512/8282/8282119.png',

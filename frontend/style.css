@@ -1,7 +1,7 @@
-/* style.css - Dark Theme for VoiceVote Election Assistant */
+/* style.css - Dark Theme for Electo Election Assistant */
 
 :root {
-  /* VoiceVote Dark Theme Colors */
+  /* Electo Dark Theme Colors */
   --bg-base: hsl(60, 2%, 9%); /* Very dark grey */
   --bg-surface: hsl(60, 2%, 12%);
   --bg-hover: hsl(60, 2%, 18%);

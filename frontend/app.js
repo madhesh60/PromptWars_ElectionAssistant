@@ -1,5 +1,5 @@
 /**
- * app.js — Main entry point and coordinator for the VoiceVote application.
+ * app.js — Main entry point and coordinator for the Electo application.
  * Loads config from the backend, fetches election data, and initializes all modules.
  */
 
@@ -30,7 +30,7 @@ const AppState = {
 
 // Wait for DOM to load, then boot up all modules in sequence
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('VoiceVote App Initialized')
+  console.log('Electo App Initialized')
 
   // Step 1: Securely load API keys from backend
   await loadConfig()

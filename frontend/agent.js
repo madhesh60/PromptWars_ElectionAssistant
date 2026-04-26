@@ -127,7 +127,7 @@ window.AgenticSystem = (function () {
 
     // Build the iCalendar (.ics) file content
     let icsContent =
-      'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//VoiceVote//Election Assistant//EN\n'
+      'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Electo//Election Assistant//EN\n'
 
     electionData.forEach((event) => {
       // Convert timestamp to ICS date format (YYYYMMDD)
@@ -139,7 +139,7 @@ window.AgenticSystem = (function () {
 
       // Append each election event as a VEVENT block
       icsContent += 'BEGIN:VEVENT\n'
-      icsContent += `UID:${event.id}@voicevote.in\n`
+      icsContent += `UID:${event.id}@electo.in\n`
       icsContent += `DTSTAMP:${dateStr}T000000Z\n`
       icsContent += `DTSTART;VALUE=DATE:${dateStr}\n`
       icsContent += `SUMMARY:Election - ${event.phase}\n`

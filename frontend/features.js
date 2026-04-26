@@ -322,7 +322,7 @@ Question: "${text}"`
         // Replace typing indicator with actual response
         const typingEl = document.getElementById(typingId)
         if (typingEl) {
-          typingEl.innerHTML = `<div class="const-avatar">⚖️</div><div class="const-bubble">${formatResponse(response)}</div>`
+          typingEl.innerHTML = `<div class="const-avatar">Gov</div><div class="const-bubble">${formatResponse(response)}</div>`
         }
       } catch (e) {
         const typingEl = document.getElementById(typingId)

@@ -11,9 +11,9 @@ window.ChatAssistant = (function () {
   const chatSendBtn = document.getElementById('chat-send-btn')
   const welcomeMsg = document.getElementById('welcome-message')
 
-  const systemPrompt = `You are VoiceVote, a friendly and helpful Indian Election Assistant. 
+  const systemPrompt = `You are Electo, a formal, precise, and highly professional Indian Election Assistant. 
     Provide clear, accurate, and structured answers about the election process, voting steps, and general voter information in India. 
-    Use markdown if needed for readability. Be friendly but professional.`
+    Use markdown if needed for readability. Maintain a strict professional tone without any casual language.`
 
   let conversationContext = []
 
@@ -71,7 +71,7 @@ window.ChatAssistant = (function () {
 
     let contentHtml = ''
     if (sender === 'assistant') {
-      contentHtml = `<div class="avatar">🤖</div><div class="bubble">${text}</div>`
+      contentHtml = `<div class="avatar">AI</div><div class="bubble">${text}</div>`
     } else {
       contentHtml = `<div class="bubble">${text}</div>`
     }
