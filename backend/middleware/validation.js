@@ -1,3 +1,7 @@
+const CONSTANTS = require('../config/constants')
+
+const MAX_LENGTH = CONSTANTS.MAX_INPUT_LENGTH || 2000
+
 const stripHtml = (html) => {
   if (typeof html !== 'string') return html
   return html.replace(/<[^>]*>?/gm, '')
@@ -12,10 +16,10 @@ const validateInput = (req, res, next) => {
           if (part.text !== undefined) {
             let text = String(part.text).trim()
             if (!text) {
-              return res.status(400).json({ error: 'Input cannot be empty' })
+              return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.CONTENTS_REQUIRED })
             }
-            if (text.length > 2000) {
-              return res.status(400).json({ error: 'Input exceeds 2000 characters' })
+            if (text.length > MAX_LENGTH) {
+              return res.status(400).json({ error: `Input exceeds ${MAX_LENGTH} characters` })
             }
             part.text = stripHtml(text)
           }
@@ -28,10 +32,10 @@ const validateInput = (req, res, next) => {
   if (req.body.text !== undefined) {
     let text = String(req.body.text).trim()
     if (!text) {
-      return res.status(400).json({ error: 'Text cannot be empty' })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED })
     }
-    if (text.length > 2000) {
-      return res.status(400).json({ error: 'Input exceeds 2000 characters' })
+    if (text.length > MAX_LENGTH) {
+      return res.status(400).json({ error: `Input exceeds ${MAX_LENGTH} characters` })
     }
     req.body.text = stripHtml(text)
   }
@@ -40,10 +44,10 @@ const validateInput = (req, res, next) => {
   if (req.body.prompt !== undefined) {
     let text = String(req.body.prompt).trim()
     if (!text) {
-      return res.status(400).json({ error: 'Prompt cannot be empty' })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.PROMPT_REQUIRED })
     }
-    if (text.length > 2000) {
-      return res.status(400).json({ error: 'Input exceeds 2000 characters' })
+    if (text.length > MAX_LENGTH) {
+      return res.status(400).json({ error: `Input exceeds ${MAX_LENGTH} characters` })
     }
     req.body.prompt = stripHtml(text)
   }
