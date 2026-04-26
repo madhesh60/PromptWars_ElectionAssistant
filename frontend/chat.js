@@ -45,13 +45,18 @@ window.ChatAssistant = (function () {
     addMessageToUI('user', text)
     chatInput.value = ''
     chatInput.style.height = 'auto' // reset height
-
+    
+    // Show "thinking" message
+    const announcer = document.getElementById('loading-announcer')
+    if (announcer) announcer.textContent = 'Loading answer...'
     const loadingId = addMessageToUI('assistant', 'Thinking...')
 
     try {
       const response = await askGemini(text)
+      if (announcer) announcer.textContent = ''
       updateMessageUI(loadingId, response)
     } catch (error) {
+      if (announcer) announcer.textContent = ''
       console.error('Chat error:', error)
       updateMessageUI(
         loadingId,

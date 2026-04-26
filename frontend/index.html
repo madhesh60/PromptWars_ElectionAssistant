@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body class="theme-dark">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="app-wrapper">
       <!-- Sidebar -->
       <aside class="sidebar">
@@ -41,7 +42,7 @@
               >VoiceVote</span
             >
           </div>
-          <button class="icon-btn sidebar-toggle">
+          <button class="icon-btn sidebar-toggle" aria-label="Toggle sidebar">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
               <path
                 d="M16.5 4A1.5 1.5 0 0 1 18 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 2 14.5v-9A1.5 1.5 0 0 1 3.5 4zM7 15h9.5a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5H7zM3.5 5a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5H6V5z"
@@ -186,11 +187,12 @@
       </aside>
 
       <!-- Main Content -->
-      <main class="main-content">
+      <main id="main-content" class="main-content">
+        <div id="loading-announcer" aria-live="polite" class="sr-only"></div>
         <!-- View: Chat (Default) -->
-        <div id="view-chat" class="view-section active">
+        <section id="view-chat" class="view-section active">
           <div class="welcome-container" id="welcome-message">
-            <h2 class="greeting">Welcome to VoiceVote</h2>
+            <h1 class="greeting">Welcome to VoiceVote</h1>
             <p class="subtitle">
               Your smart AI assistant for the Indian Elections.
             </p>
@@ -212,8 +214,10 @@
             </div>
             <div class="input-box">
               <div class="input-row">
+                <label for="chat-input" class="sr-only">Type your election question</label>
                 <textarea
                   id="chat-input"
+                  aria-label="Type your election question"
                   placeholder="Ask anything about Indian elections..."
                   rows="1"
                 ></textarea>
@@ -286,10 +290,10 @@
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         <!-- View: Timeline -->
-        <div
+        <section
           id="view-timeline"
           class="view-section timeline-view"
           style="display: none"
@@ -334,10 +338,10 @@
               <!-- Populated dynamically by JS -->
             </div>
           </div>
-        </div>
+        </section>
 
         <!-- View: Reminders -->
-        <div id="view-reminders" class="view-section" style="display: none">
+        <section id="view-reminders" class="view-section" style="display: none">
           <div class="reminders-header">
             <h2>Agentic Reminders</h2>
             <p>Never miss a crucial election date.</p>
@@ -356,12 +360,12 @@
                 Export to Calendar
               </button>
             </div>
-            <div id="agent-status" class="status-msg"></div>
+            <div id="agent-status" class="status-msg" role="alert"></div>
           </div>
-        </div>
+        </section>
 
         <!-- View: Learn (Video) -->
-        <div
+        <section
           id="view-learn"
           class="view-section learn-view"
           style="display: none"
@@ -405,10 +409,10 @@
               </p>
             </div>
           </div>
-        </div>
+        </section>
 
         <!-- View: Policy & Manifesto Analyzer -->
-        <div
+        <section
           id="view-analyzer"
           class="view-section tool-view manifesto-view"
           style="display: none"
@@ -469,6 +473,7 @@
           <!-- Quick Explain Mode -->
           <div id="mode-quick" style="display: block">
             <div class="tool-input-card">
+              <label for="ballot-input" class="sr-only">Paste the policy text</label>
               <textarea
                 id="ballot-input"
                 class="tool-textarea"
@@ -578,10 +583,10 @@
             <!-- Promise Cards Grid -->
             <div id="manifesto-output" class="promise-grid"></div>
           </div>
-        </div>
+        </section>
 
         <!-- View: Bias Detector -->
-        <div
+        <section
           id="view-bias"
           class="view-section tool-view"
           style="display: none"
@@ -594,6 +599,7 @@
             </p>
           </div>
           <div class="tool-input-card">
+            <label for="bias-input" class="sr-only">Political statement</label>
             <textarea
               id="bias-input"
               class="tool-textarea"
@@ -607,16 +613,17 @@
             </div>
           </div>
           <div id="bias-output" class="tool-output"></div>
-        </div>
+        </section>
 
         <!-- View: Who Represents Me -->
-        <div id="view-rep" class="view-section tool-view" style="display: none">
+        <section id="view-rep" class="view-section tool-view" style="display: none">
           <div class="tool-header">
             <h2>👤 Who Represents Me</h2>
             <p>Enter your city, area, or pin code to find your MP and MLA</p>
           </div>
           <div class="tool-input-card">
             <div class="tool-input-row">
+              <label for="rep-input" class="sr-only">City, area, or pin code</label>
               <input
                 type="text"
                 id="rep-input"
@@ -629,10 +636,10 @@
             </div>
           </div>
           <div id="rep-output" class="tool-output"></div>
-        </div>
+        </section>
 
         <!-- View: Ask The Constitution -->
-        <div
+        <section
           id="view-constitution"
           class="view-section tool-view const-view"
           style="display: none"
@@ -646,6 +653,7 @@
           </div>
           <div id="const-output" class="const-chat"></div>
           <div class="const-input-bar">
+            <label for="const-input" class="sr-only">Ask a constitution question</label>
             <input
               type="text"
               id="const-input"
@@ -654,7 +662,7 @@
             />
             <button id="const-submit" class="btn primary-btn">Ask</button>
           </div>
-        </div>
+        </section>
       </main>
     </div>
 

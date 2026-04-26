@@ -43,6 +43,8 @@ window.FeatureTools = (function () {
 
   // HELPER: Show loading spinner in a container
   function showLoading(container) {
+    const announcer = document.getElementById('loading-announcer')
+    if (announcer) announcer.textContent = 'Loading answer...'
     container.innerHTML = `
             <div class="feature-loading">
                 <div class="spinner"></div>
@@ -97,9 +99,13 @@ Provide:
 User input:
 ${text}`
         const response = await askGemini(prompt, fileContent, fileName)
+        const announcer = document.getElementById('loading-announcer')
+        if (announcer) announcer.textContent = ''
         output.innerHTML = `<div class="feature-result">${formatResponse(response)}</div>`
       } catch (e) {
-        output.innerHTML = `<div class="feature-error">Error: ${e.message}. Is the backend running?</div>`
+        const announcer = document.getElementById('loading-announcer')
+        if (announcer) announcer.textContent = ''
+        output.innerHTML = `<div class="feature-error" role="alert">Error: ${e.message}. Is the backend running?</div>`
       }
     })
   }
@@ -321,7 +327,7 @@ Question: "${text}"`
       } catch (e) {
         const typingEl = document.getElementById(typingId)
         if (typingEl) {
-          typingEl.innerHTML = `<div class="const-bubble feature-error">Error: ${e.message}</div>`
+          typingEl.innerHTML = `<div class="const-bubble feature-error" role="alert">Error: ${e.message}</div>`
         }
       }
 
