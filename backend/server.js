@@ -12,7 +12,11 @@ app.use(express.json({ limit: `${CONSTANTS.MAX_IMAGE_SIZE_MB}mb` }))
 
 app.use('/api', apiRoutes)
 
-app.listen(CONSTANTS.PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Backend server running on http://localhost:${CONSTANTS.PORT}`)
-})
+if (require.main === module) {
+  app.listen(CONSTANTS.PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Backend server running on http://localhost:${CONSTANTS.PORT}`)
+  })
+}
+
+module.exports = app
