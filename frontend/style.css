@@ -1478,3 +1478,25 @@ textarea::placeholder {
   white-space: nowrap;
   border: 0;
 }
+
+/* ==================== DEFENSIVE HIDDEN ELEMENTS ==================== */
+/* File inputs are always triggered via styled buttons — never show natively */
+#chat-file-input,
+#ballot-file,
+#manifesto-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Elements hidden on initial load (JS shows them when needed) */
+#voice-status,
+#chat-file-name,
+#manifesto-file-name,
+#manifesto-progress,
+#manifesto-filters {
+  display: none;
+}
