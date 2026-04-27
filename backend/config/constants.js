@@ -4,7 +4,7 @@
  */
 const CONSTANTS = {
   PORT: process.env.PORT || 3000,
-  GEMINI_MODEL: 'gemini-2.0-flash',
+  GEMINI_MODEL: 'gemini-1.5-flash',
   MAX_INPUT_LENGTH: 2000,
   MAX_IMAGE_SIZE_MB: 50,
   TTS_URL: 'https://texttospeech.googleapis.com/v1/text:synthesize',
