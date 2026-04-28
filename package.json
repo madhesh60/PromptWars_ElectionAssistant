@@ -1,31 +1,21 @@
 {
-  "name": "promptwars_electionassistant",
+  "name": "electo",
   "version": "1.0.0",
-  "description": "",
+  "description": "AI-driven Indian Election Assistant",
   "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/madhesh60/PromptWars_ElectionAssistant.git"
+    "url": "git+https://github.com/madhesh60/Electo.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["election", "india", "ai", "civic"],
+  "author": "madhesh60",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/madhesh60/PromptWars_ElectionAssistant/issues"
+    "url": "https://github.com/madhesh60/Electo/issues"
   },
-  "homepage": "https://github.com/madhesh60/PromptWars_ElectionAssistant#readme",
-  "devDependencies": {
-    "eslint": "^8.57.1",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import": "^2.32.0",
-    "prettier": "^3.8.3"
-  }
+  "homepage": "https://github.com/madhesh60/Electo#readme"
 }

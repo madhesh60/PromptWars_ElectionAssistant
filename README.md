@@ -1,113 +1,65 @@
-# VoiceVote: Agentic Indian Election Assistant
+# Electo — AI Indian Election Assistant
 
-## Project Overview
-**VoiceVote** is an advanced, AI-driven civic engagement platform designed to facilitate seamless interaction between Indian citizens and the electoral process. By leveraging large language models and real-time data from the Election Commission of India (ECI), the system provides a voice-first, agentic assistant capable of delivering accurate information, providing step-by-step guidance, and managing critical electoral timelines through automated reminders.
+**Electo** is an AI-driven civic engagement platform for Indian citizens. It delivers voice-first, agentic election assistance powered by Google Gemini, providing real-time information, bias detection, manifesto analysis, and constitutional law Q&A.
 
-## System Architecture
+## Features
+
+| Feature | Description |
+|---|---|
+| **AI Chat** | Gemini-powered Q&A on Indian elections |
+| **Bias Detector** | Detects political lean in statements (Left / Center / Right) |
+| **Manifesto Analyzer** | Parse party PDFs and extract promises |
+| **Who Represents Me** | Find your MP/MLA by city or pincode |
+| **Ask The Constitution** | Query Indian election laws & constitutional provisions |
+| **3D Election Timeline** | Interactive Three.js visualization of election phases |
+| **Agentic Reminders** | Push notifications for key electoral dates |
+
+## Architecture
 
 ```mermaid
 graph TD
-    subgraph Client_Layer [Client Interface]
-        UI[Web UI: HTML/CSS/JS]
-        Voice[Voice Module: Web Speech API]
-        Chat[Chat Module: Gemini API]
-        Timeline[3D Timeline: Three.js]
+    subgraph Frontend
+        UI[Web UI] --> Chat[Chat Module]
+        UI --> Voice[Voice: Web Speech API]
+        UI --> Timeline[3D Timeline: Three.js]
     end
-
-    subgraph Logic_Layer [Application Logic]
-        Coordinator[app.js: Orchestrator]
-        Agent[agent.js: Notification Engine]
-        TTS[Google Text-to-Speech]
+    subgraph Backend
+        Server[Express Server] --> Gemini[Gemini API]
+        Server --> TTS[Google TTS]
     end
-
-    subgraph Data_Layer [Data & AI Services]
-        LLM[Gemini Pro: Reasoning Engine]
-        Scraper[ECI Data Fetcher: Puppeteer/Cheerio]
-        Calendar[Google Calendar API]
-        ECI[(ECI Official Source)]
-    end
-
-    UI --> Coordinator
-    Voice -->|STT| Coordinator
-    Coordinator --> LLM
-    LLM --> Coordinator
-    Coordinator -->|Text| TTS
-    TTS --> Voice
-    Coordinator --> Chat
-    Scraper -->|Live Dates| ECI
-    Scraper --> Agent
-    Agent -->|Push Notifications| UI
-    Agent --> Calendar
+    Frontend --> Backend
 ```
 
-## Key Features
+## Tech Stack
 
-### 1. Intelligent Voice Interface
-The system utilizes the **Web Speech API** for real-time speech-to-text (STT) conversion and the **Google Text-to-Speech API** for high-fidelity audio responses. This ensures accessibility for users with varying levels of digital literacy or visual impairments.
+| Layer | Technology |
+|---|---|
+| Frontend | Vanilla JS / HTML / CSS |
+| AI | Google Gemini API |
+| Voice | Web Speech API + Google TTS |
+| 3D | Three.js |
+| Backend | Node.js + Express |
+| Notifications | Web Push API + Service Workers |
 
-### 2. Context-Aware Chat Assistant
-Powered by the **Gemini API**, the chat interface provides grounded responses based on official ECI documentation. The assistant is programmed to act as a precise civic guide, handling complex queries regarding voter registration, documentation, and legislative procedures.
+## Setup
 
-### 3. Agentic Notification System
-VoiceVote functions as an autonomous agent by:
-- **Real-time Synchronization:** Fetching live data from `eci.gov.in` and `voters.eci.gov.in`.
-- **Automated Reminders:** Utilizing **Service Workers** and the **Web Push API** to deliver critical notifications 24 hours prior to registration deadlines and polling dates.
-- **Calendar Integration:** Enabling users to synchronize electoral phases with their personal **Google Calendar**.
+```bash
+git clone https://github.com/madhesh60/Electo.git
+cd Electo
+npm install
+cd backend && npm install
+```
 
-### 4. Interactive 3D Visualization
-A high-performance **Three.js** implementation provides a 3D animated timeline of election phases. This visualization maps the temporal progression of the electoral process, allowing users to interact with specific nodes for detailed phase-specific information.
+Create a `.env` file:
+```env
+GEMINI_API_KEY=your_gemini_key
+GOOGLE_TTS_API_KEY=your_tts_key
+```
 
-## Technical Specifications
-
-| Component | Technology |
-| :--- | :--- |
-| **Frontend Engine** | Vanilla JavaScript / React |
-| **AI Reasoning** | Google Gemini API (Pro) |
-| **Voice Synthesis** | Google Cloud Text-to-Speech |
-| **3D Rendering** | Three.js |
-| **Data Acquisition** | Node.js (Puppeteer / Cheerio) |
-| **Push Notifications** | Web Push API + Service Workers |
-| **Storage** | LocalStorage / IndexedDB (Privacy-first) |
-
-## Installation and Deployment
-
-### Prerequisites
-- Node.js (v18.0 or higher)
-- Google Cloud Project with Gemini and TTS APIs enabled
-- Modern browser supporting Web Speech and Push APIs
-
-### Setup Instructions
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/madhesh60/PromptWars_ElectionAssistant.git
-   cd PromptWars_ElectionAssistant
-   ```
-
-2. **Configure Environment Variables:**
-   Create a `.env` file in the root directory:
-   ```env
-   GEMINI_API_KEY=your_gemini_key
-   GOOGLE_TTS_API_KEY=your_tts_key
-   ```
-
-3. **Install Dependencies:**
-   ```bash
-   npm install
-   ```
-
-4. **Execution:**
-   For development mode:
-   ```bash
-   npm run dev
-   ```
-
-## Security and Compliance
-- **Data Sovereignty:** All user interactions and reminder settings are stored locally within the user's browser environment. No PII (Personally Identifiable Information) is transmitted to external servers.
-- **API Security:** Sensitive keys are managed via server-side environment variables and are never exposed to the client-side bundle.
-- **Source Integrity:** Data is exclusively sourced from verified Election Commission of India (ECI) portals.
-
-## Accessibility Statement
-VoiceVote is engineered with inclusivity as a core principle. The multimodal interface (Voice, Text, and Visual) complies with WCAG 2.1 standards, ensuring that information is perceivable and operable for all citizens, regardless of physical or cognitive ability.
+Run:
+```bash
+npm run dev
+```
 
 ---
-*Developed for the Google Antigravity Hackathon*
+*Built for the Google Antigravity PromptWars Hackathon*
