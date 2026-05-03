@@ -55,6 +55,14 @@ window.ChatAssistant = (function () {
       const response = await askGemini(text)
       if (announcer) announcer.textContent = ''
       updateMessageUI(loadingId, response)
+
+      // Google Services: Save to Firestore & GA4 Analytics
+      if (window.FirebaseService) {
+        window.FirebaseService.saveChatToFirestore(text, response)
+      }
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'chat_search', { search_term: text })
+      }
     } catch (error) {
       if (announcer) announcer.textContent = ''
       console.error('Chat error:', error)
@@ -90,10 +98,7 @@ window.ChatAssistant = (function () {
     const msgDiv = document.getElementById(msgId)
     if (msgDiv) {
       const bubble = msgDiv.querySelector('.bubble')
-      let formattedText = newText.replace(
-        /\*\*(.*?)\*\*/g,
-        '<strong>$1</strong>'
-      )
+      let formattedText = newText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       formattedText = formattedText.replace(/\n/g, '<br>')
       bubble.innerHTML = formattedText
     }
@@ -130,9 +135,7 @@ window.ChatAssistant = (function () {
       conversationContext.push({ role: 'model', parts: [{ text: replyText }] })
 
       if (conversationContext.length > 10) {
-        conversationContext = conversationContext.slice(
-          conversationContext.length - 10
-        )
+        conversationContext = conversationContext.slice(conversationContext.length - 10)
       }
       return replyText
     }

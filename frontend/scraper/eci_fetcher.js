@@ -52,16 +52,14 @@ window.ECIFetcher = (function () {
       id: 'phase7',
       phase: 'Phase 7',
       date: '2024-06-01',
-      description:
-        'Final phase — voting for 57 constituencies across 8 states.',
+      description: 'Final phase — voting for 57 constituencies across 8 states.',
       timestamp: new Date('2024-06-01T00:00:00').getTime(),
     },
     {
       id: 'results',
       phase: 'Results Day',
       date: '2024-06-04',
-      description:
-        'Counting of votes and declaration of results for all 543 seats.',
+      description: 'Counting of votes and declaration of results for all 543 seats.',
       timestamp: new Date('2024-06-04T00:00:00').getTime(),
     },
   ]

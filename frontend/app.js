@@ -35,7 +35,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Step 1: Securely load API keys from backend
   await loadConfig()
 
-  // Step 2: Fetch election schedule data (backend → Gemini, or static fallback)
+  // Initialize Firebase Auth UI updates
+  if (window.FirebaseService) {
+    window.FirebaseService.onAuthStateChanged(window.FirebaseService.auth, (user) => {
+      const greeting = document.getElementById('greeting')
+      if (user && greeting) {
+        greeting.textContent = `Welcome, ${user.displayName}!`
+      } else if (greeting) {
+        greeting.textContent = 'Please sign in'
+      }
+    })
+  }
   if (window.ECIFetcher) {
     AppState.electionData = await window.ECIFetcher.getElectionData()
     console.log('Election Data Loaded:', AppState.electionData)
@@ -53,10 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Step 5: Initialize the 3D Timeline (Three.js + GSAP)
   if (window.TimelineRenderer) {
-    window.TimelineRenderer.init(
-      'three-canvas-container',
-      AppState.electionData
-    )
+    window.TimelineRenderer.init('three-canvas-container', AppState.electionData)
   }
 
   // Step 6: Initialize the Agentic Reminder system (Push Notifications + Calendar)

@@ -26,9 +26,7 @@ window.AgenticSystem = (function () {
       navigator.serviceWorker
         .register('service-worker.js')
         .then((reg) => console.log('Service Worker registered:', reg.scope))
-        .catch((err) =>
-          console.error('Service Worker registration failed:', err)
-        )
+        .catch((err) => console.error('Service Worker registration failed:', err))
     }
   }
 
@@ -36,8 +34,7 @@ window.AgenticSystem = (function () {
   async function requestNotificationPermission() {
     // Check if browser supports notifications at all
     if (!('Notification' in window)) {
-      statusText.innerText =
-        'This browser does not support desktop notifications.'
+      statusText.innerText = 'This browser does not support desktop notifications.'
       return
     }
 
@@ -45,13 +42,11 @@ window.AgenticSystem = (function () {
     const permission = await Notification.requestPermission()
 
     if (permission === 'granted') {
-      statusText.innerText =
-        "Notifications enabled! We'll remind you before key dates."
+      statusText.innerText = "Notifications enabled! We'll remind you before key dates."
       statusText.style.color = '#22c55e' // Green success
       scheduleReminders()
     } else {
-      statusText.innerText =
-        "Notifications denied. You won't receive automatic alerts."
+      statusText.innerText = "Notifications denied. You won't receive automatic alerts."
       statusText.style.color = '#ef4444' // Red warning
     }
   }
@@ -126,8 +121,7 @@ window.AgenticSystem = (function () {
     statusText.innerText = 'Generating calendar file...'
 
     // Build the iCalendar (.ics) file content
-    let icsContent =
-      'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Electo//Election Assistant//EN\n'
+    let icsContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Electo//Election Assistant//EN\n'
 
     electionData.forEach((event) => {
       // Convert timestamp to ICS date format (YYYYMMDD)
@@ -158,8 +152,7 @@ window.AgenticSystem = (function () {
     link.click()
     document.body.removeChild(link)
 
-    statusText.innerText =
-      'Calendar file downloaded! Open it to add events to your calendar.'
+    statusText.innerText = 'Calendar file downloaded! Open it to add events to your calendar.'
     statusText.style.color = '#22c55e' // Green success
   }
 

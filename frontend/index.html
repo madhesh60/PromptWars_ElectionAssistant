@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:3000 https://prompt-wars-election-assistant.vercel.app; img-src 'self' data: blob:; worker-src 'self' blob:"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://www.googletagmanager.com https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:3000 https://prompt-wars-election-assistant.vercel.app https://*.googleapis.com https://*.firebaseio.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com wss://*.firebaseio.com https://nominatim.openstreetmap.org; img-src 'self' data: blob: https://*.openstreetmap.org https://*.tile.openstreetmap.org https://*.googleusercontent.com; worker-src 'self' blob:"
     />
     <meta
       http-equiv="Permissions-Policy"
@@ -22,6 +22,20 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8D1Z0W9CNZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+      gtag('config', 'G-8D1Z0W9CNZ')
+    </script>
   </head>
   <body class="theme-dark">
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -44,9 +58,7 @@
               <path d="M2 17l10 5 10-5"></path>
               <path d="M2 12l10 5 10-5"></path>
             </svg>
-            <span class="logo-text" style="font-weight: 600; font-size: 18px"
-              >Electo</span
-            >
+            <span class="logo-text" style="font-weight: 600; font-size: 18px">Electo</span>
           </div>
           <button class="icon-btn sidebar-toggle" aria-label="Toggle sidebar">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -67,9 +79,7 @@
               stroke="currentColor"
               stroke-width="2"
             >
-              <path
-                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-              ></path>
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
             <span>Chat</span>
           </a>
@@ -82,9 +92,7 @@
               stroke="currentColor"
               stroke-width="2"
             >
-              <path
-                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-              ></path>
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
               <line x1="16" y1="13" x2="8" y2="13"></line>
               <line x1="16" y1="17" x2="8" y2="17"></line>
@@ -131,9 +139,7 @@
               stroke-width="2"
             >
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-              <path
-                d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
-              ></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
             </svg>
             <span>Ask The Constitution</span>
           </a>
@@ -183,10 +189,15 @@
 
         <div class="sidebar-footer">
           <div class="user-profile">
-            <div class="avatar">U</div>
-            <div class="user-details">
-              <span class="user-name">User</span>
-              <span class="user-plan">Indian Citizen</span>
+            <div class="user-details" style="width: 100%">
+              <p id="greeting" style="margin-bottom: 5px; font-weight: 500">Please sign in</p>
+              <button
+                onclick="if (window.FirebaseService) window.FirebaseService.signInWithGoogle()"
+                class="btn primary-btn"
+                style="width: 100%; padding: 8px"
+              >
+                Sign in with Google
+              </button>
             </div>
           </div>
         </div>
@@ -199,9 +210,7 @@
         <section id="view-chat" class="view-section active">
           <div class="welcome-container" id="welcome-message">
             <h1 class="greeting">Welcome to Electo</h1>
-            <p class="subtitle">
-              Your formal AI assistant for the Indian Elections.
-            </p>
+            <p class="subtitle">Your formal AI assistant for the Indian Elections.</p>
           </div>
 
           <div class="chat-history-wrapper">
@@ -211,18 +220,12 @@
           </div>
 
           <div class="input-container-wrapper">
-            <div
-              class="voice-status-indicator"
-              id="voice-status"
-              style="display: none"
-            >
+            <div class="voice-status-indicator" id="voice-status" style="display: none">
               Listening...
             </div>
             <div class="input-box">
               <div class="input-row">
-                <label for="chat-input" class="sr-only"
-                  >Type your election question</label
-                >
+                <label for="chat-input" class="sr-only">Type your election question</label>
                 <textarea
                   id="chat-input"
                   aria-label="Type your election question"
@@ -237,11 +240,7 @@
                   accept=".txt,.pdf,.md,.csv,.json,.doc,.docx"
                   style="display: none"
                 />
-                <button
-                  class="icon-btn attach-btn"
-                  id="chat-attach-btn"
-                  aria-label="Attach file"
-                >
+                <button class="icon-btn attach-btn" id="chat-attach-btn" aria-label="Attach file">
                   <svg
                     width="20"
                     height="20"
@@ -255,18 +254,10 @@
                     ></path>
                   </svg>
                 </button>
-                <span
-                  id="chat-file-name"
-                  class="file-name-tag"
-                  style="display: none"
-                ></span>
+                <span id="chat-file-name" class="file-name-tag" style="display: none"></span>
                 <div class="model-selector"><span>Electo AI</span></div>
                 <div class="action-buttons-right">
-                  <button
-                    class="icon-btn voice-btn"
-                    id="mic-btn"
-                    aria-label="Voice mode"
-                  >
+                  <button class="icon-btn voice-btn" id="mic-btn" aria-label="Voice mode">
                     <svg
                       width="20"
                       height="20"
@@ -280,17 +271,8 @@
                       <line x1="10" y1="16" x2="10" y2="19"></line>
                     </svg>
                   </button>
-                  <button
-                    class="icon-btn send-btn"
-                    id="chat-send-btn"
-                    aria-label="Send"
-                  >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
+                  <button class="icon-btn send-btn" id="chat-send-btn" aria-label="Send">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                       <path d="M2.5 10L18 3L10 18L8.5 11.5L2.5 10Z"></path>
                     </svg>
                   </button>
@@ -301,11 +283,7 @@
         </section>
 
         <!-- View: Timeline -->
-        <section
-          id="view-timeline"
-          class="view-section timeline-view"
-          style="display: none"
-        >
+        <section id="view-timeline" class="view-section timeline-view" style="display: none">
           <div class="timeline-header">
             <h2>Election Timeline</h2>
             <p>Track the phases of the Indian General Elections</p>
@@ -334,9 +312,7 @@
                   stroke-width="2"
                 >
                   <path d="M9 11l3 3L22 4"></path>
-                  <path
-                    d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
-                  ></path>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                 </svg>
                 <h3>Election Checklist</h3>
               </div>
@@ -356,34 +332,24 @@
           </div>
           <div class="reminders-card">
             <p>
-              Electo can automatically alert you 1 day before key election
-              events directly on your device, or you can export the schedule to
-              Google Calendar.
+              Electo can automatically alert you 1 day before key election events directly on your
+              device, or you can export the schedule to Google Calendar.
             </p>
             <div class="reminders-actions">
               <button id="enable-notifications" class="btn primary-btn">
                 Enable Push Notifications
               </button>
-              <button id="export-calendar" class="btn secondary-btn">
-                Export to Calendar
-              </button>
+              <button id="export-calendar" class="btn secondary-btn">Export to Calendar</button>
             </div>
             <div id="agent-status" class="status-msg" role="alert"></div>
           </div>
         </section>
 
         <!-- View: Learn (Video) -->
-        <section
-          id="view-learn"
-          class="view-section learn-view"
-          style="display: none"
-        >
+        <section id="view-learn" class="view-section learn-view" style="display: none">
           <div class="learn-header">
             <h2>How India Votes</h2>
-            <p>
-              Watch this short explainer to understand the Indian election
-              process
-            </p>
+            <p>Watch this short explainer to understand the Indian election process</p>
           </div>
           <div class="video-card">
             <video id="learn-video" controls preload="metadata">
@@ -396,24 +362,24 @@
               <div class="info-icon"></div>
               <h4>World's Largest Democracy</h4>
               <p>
-                India conducts the largest democratic exercise on earth, with
-                over 960 million eligible voters.
+                India conducts the largest democratic exercise on earth, with over 960 million
+                eligible voters.
               </p>
             </div>
             <div class="info-card">
               <div class="info-icon"></div>
               <h4>Multi-Phase Voting</h4>
               <p>
-                Elections are held in multiple phases across weeks to manage
-                logistics and ensure security.
+                Elections are held in multiple phases across weeks to manage logistics and ensure
+                security.
               </p>
             </div>
             <div class="info-card">
               <div class="info-icon"></div>
               <h4>EVM & VVPAT</h4>
               <p>
-                India uses Electronic Voting Machines with paper trail
-                verification for transparent counting.
+                India uses Electronic Voting Machines with paper trail verification for transparent
+                counting.
               </p>
             </div>
           </div>
@@ -428,16 +394,13 @@
           <div class="tool-header">
             <h2>Policy & Manifesto Analyzer</h2>
             <p>
-              Paste a policy snippet, or upload a party manifesto PDF to extract
-              promises and explain the impact.
+              Paste a policy snippet, or upload a party manifesto PDF to extract promises and
+              explain the impact.
             </p>
           </div>
 
           <!-- Tab toggle for mode -->
-          <div
-            class="analyzer-tabs"
-            style="display: flex; gap: 10px; margin-bottom: 20px"
-          >
+          <div class="analyzer-tabs" style="display: flex; gap: 10px; margin-bottom: 20px">
             <button
               id="tab-quick"
               class="btn primary-btn"
@@ -447,12 +410,8 @@
                 document.getElementById('mode-deep').style.display = 'none'
                 this.classList.add('primary-btn')
                 this.classList.remove('secondary-btn')
-                document
-                  .getElementById('tab-deep')
-                  .classList.add('secondary-btn')
-                document
-                  .getElementById('tab-deep')
-                  .classList.remove('primary-btn')
+                document.getElementById('tab-deep').classList.add('secondary-btn')
+                document.getElementById('tab-deep').classList.remove('primary-btn')
               "
             >
               Quick Policy Explain
@@ -466,12 +425,8 @@
                 document.getElementById('mode-quick').style.display = 'none'
                 this.classList.add('primary-btn')
                 this.classList.remove('secondary-btn')
-                document
-                  .getElementById('tab-quick')
-                  .classList.add('secondary-btn')
-                document
-                  .getElementById('tab-quick')
-                  .classList.remove('primary-btn')
+                document.getElementById('tab-quick').classList.add('secondary-btn')
+                document.getElementById('tab-quick').classList.remove('primary-btn')
               "
             >
               Deep Manifesto Parse (PDF)
@@ -481,9 +436,7 @@
           <!-- Quick Explain Mode -->
           <div id="mode-quick" style="display: block">
             <div class="tool-input-card">
-              <label for="ballot-input" class="sr-only"
-                >Paste the policy text</label
-              >
+              <label for="ballot-input" class="sr-only">Paste the policy text</label>
               <textarea
                 id="ballot-input"
                 class="tool-textarea"
@@ -517,9 +470,7 @@
                     <span id="ballot-file-label">Attach file</span>
                   </button>
                 </div>
-                <button id="ballot-submit" class="btn primary-btn">
-                  Analyze Policy
-                </button>
+                <button id="ballot-submit" class="btn primary-btn">Analyze Policy</button>
               </div>
             </div>
             <div id="ballot-output" class="tool-output"></div>
@@ -528,12 +479,7 @@
           <!-- Deep Parse Mode -->
           <div id="mode-deep" style="display: none">
             <div class="manifesto-upload-card">
-              <input
-                type="file"
-                id="manifesto-file"
-                accept=".pdf"
-                style="display: none"
-              />
+              <input type="file" id="manifesto-file" accept=".pdf" style="display: none" />
               <div class="upload-zone" id="manifesto-upload-btn">
                 <svg
                   width="48"
@@ -550,11 +496,7 @@
                 <p>Click to upload a manifesto PDF</p>
                 <span class="upload-hint">Supports .pdf files up to 50MB</span>
               </div>
-              <span
-                id="manifesto-file-name"
-                class="file-name-tag"
-                style="display: none"
-              ></span>
+              <span id="manifesto-file-name" class="file-name-tag" style="display: none"></span>
               <button
                 id="manifesto-parse-btn"
                 class="btn primary-btn"
@@ -566,29 +508,15 @@
             </div>
 
             <!-- Progress Bar -->
-            <div
-              id="manifesto-progress"
-              class="manifesto-progress"
-              style="display: none"
-            >
+            <div id="manifesto-progress" class="manifesto-progress" style="display: none">
               <div class="progress-track">
-                <div
-                  class="progress-fill"
-                  id="manifesto-progress-bar"
-                  style="width: 0%"
-                ></div>
+                <div class="progress-fill" id="manifesto-progress-bar" style="width: 0%"></div>
               </div>
-              <p id="manifesto-progress-text" class="progress-text">
-                Starting analysis...
-              </p>
+              <p id="manifesto-progress-text" class="progress-text">Starting analysis...</p>
             </div>
 
             <!-- Filter Buttons -->
-            <div
-              id="manifesto-filters"
-              class="manifesto-filters"
-              style="display: none"
-            ></div>
+            <div id="manifesto-filters" class="manifesto-filters" style="display: none"></div>
 
             <!-- Promise Cards Grid -->
             <div id="manifesto-output" class="promise-grid"></div>
@@ -596,16 +524,12 @@
         </section>
 
         <!-- View: Bias Detector -->
-        <section
-          id="view-bias"
-          class="view-section tool-view"
-          style="display: none"
-        >
+        <section id="view-bias" class="view-section tool-view" style="display: none">
           <div class="tool-header">
             <h2>Political Bias Detector</h2>
             <p>
-              Enter any political statement or headline — AI detects if it leans
-              Left, Center, or Right
+              Enter any political statement or headline — AI detects if it leans Left, Center, or
+              Right
             </p>
           </div>
           <div class="tool-input-card">
@@ -617,41 +541,35 @@
               rows="3"
             ></textarea>
             <div class="tool-actions">
-              <button id="bias-submit" class="btn primary-btn">
-                Detect Bias
-              </button>
+              <button id="bias-submit" class="btn primary-btn">Detect Bias</button>
             </div>
           </div>
           <div id="bias-output" class="tool-output"></div>
         </section>
 
         <!-- View: Who Represents Me -->
-        <section
-          id="view-rep"
-          class="view-section tool-view"
-          style="display: none"
-        >
+        <section id="view-rep" class="view-section tool-view" style="display: none">
           <div class="tool-header">
             <h2>Who Represents Me?</h2>
             <p>Enter your city, area, or pin code to find your MP and MLA</p>
           </div>
           <div class="tool-input-card">
             <div class="tool-input-row">
-              <label for="rep-input" class="sr-only"
-                >City, area, or pin code</label
-              >
+              <label for="rep-input" class="sr-only">City, area, or pin code</label>
               <input
                 type="text"
                 id="rep-input"
                 class="tool-text-input"
                 placeholder="e.g. Chennai, 600001, Varanasi..."
               />
-              <button id="rep-submit" class="btn primary-btn">
-                Find My Rep
-              </button>
+              <button id="rep-submit" class="btn primary-btn">Find My Rep</button>
             </div>
           </div>
           <div id="rep-output" class="tool-output"></div>
+          <div
+            id="map"
+            style="height: 300px; width: 100%; margin-top: 20px; border-radius: 8px"
+          ></div>
         </section>
 
         <!-- View: Ask The Constitution -->
@@ -663,15 +581,13 @@
           <div class="tool-header">
             <h2>Ask The Constitution</h2>
             <p>
-              Ask any question about Indian election laws, voting rights, or
-              constitutional provisions
+              Ask any question about Indian election laws, voting rights, or constitutional
+              provisions
             </p>
           </div>
           <div id="const-output" class="const-chat"></div>
           <div class="const-input-bar">
-            <label for="const-input" class="sr-only"
-              >Ask a constitution question</label
-            >
+            <label for="const-input" class="sr-only">Ask a constitution question</label>
             <input
               type="text"
               id="const-input"
@@ -692,6 +608,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="module" src="firebase.js"></script>
     <script src="scraper/eci_fetcher.js"></script>
     <script src="voice.js"></script>
     <script src="chat.js"></script>
@@ -715,26 +632,16 @@
         'learn',
       ]
       navIds.forEach((id) => {
-        document
-          .getElementById('nav-' + id)
-          .addEventListener('click', () => switchView(id))
+        document.getElementById('nav-' + id).addEventListener('click', () => switchView(id))
       })
 
       function switchView(viewId) {
-        document
-          .querySelectorAll('.nav-item')
-          .forEach((el) => el.classList.remove('active'))
+        document.querySelectorAll('.nav-item').forEach((el) => el.classList.remove('active'))
         document.getElementById('nav-' + viewId).classList.add('active')
-        document
-          .querySelectorAll('.view-section')
-          .forEach((el) => (el.style.display = 'none'))
+        document.querySelectorAll('.view-section').forEach((el) => (el.style.display = 'none'))
         document.getElementById('view-' + viewId).style.display = 'flex'
 
-        if (
-          viewId === 'timeline' &&
-          window.TimelineRenderer &&
-          window.TimelineRenderer.refresh
-        ) {
+        if (viewId === 'timeline' && window.TimelineRenderer && window.TimelineRenderer.refresh) {
           setTimeout(() => window.TimelineRenderer.refresh(), 10)
         }
         if (viewId !== 'learn') {

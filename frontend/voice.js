@@ -21,12 +21,9 @@ window.VoiceAssistant = (function () {
   function init(config) {
     _config = config
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!SpeechRecognition) {
-      if (statusText)
-        statusText.innerText =
-          'Speech recognition is not supported in this browser.'
+      if (statusText) statusText.innerText = 'Speech recognition is not supported in this browser.'
       if (micBtn) micBtn.disabled = true
       return
     }
@@ -71,10 +68,7 @@ window.VoiceAssistant = (function () {
         statusText.style.display = 'none'
       } catch (error) {
         console.error('Error in voice flow:', error)
-        updateMessageUI(
-          loadingId,
-          'Sorry, there was an error processing your request.'
-        )
+        updateMessageUI(loadingId, 'Sorry, there was an error processing your request.')
         statusText.style.display = 'none'
       }
     }
@@ -125,10 +119,7 @@ window.VoiceAssistant = (function () {
     const msgDiv = document.getElementById(msgId)
     if (msgDiv) {
       const bubble = msgDiv.querySelector('.bubble')
-      let formattedText = newText.replace(
-        /\*\*(.*?)\*\*/g,
-        '<strong>$1</strong>'
-      )
+      let formattedText = newText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       formattedText = formattedText.replace(/\n/g, '<br>')
       bubble.innerHTML = formattedText
     }

@@ -65,9 +65,7 @@ window.FeatureTools = (function () {
     // Show file name when a file is selected
     if (fileInput) {
       fileInput.addEventListener('change', () => {
-        fileLabel.textContent = fileInput.files[0]
-          ? fileInput.files[0].name
-          : 'Attach file'
+        fileLabel.textContent = fileInput.files[0] ? fileInput.files[0].name : 'Attach file'
       })
     }
 
@@ -84,6 +82,11 @@ window.FeatureTools = (function () {
       }
 
       if (!text && !fileContent) return
+
+      // Analytics
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'feature_used', { feature_name: 'explain_my_ballot' })
+      }
 
       showLoading(output)
       try {
@@ -122,6 +125,11 @@ ${text}`
       const text = input.value.trim()
       if (!text) return
 
+      // Analytics
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'feature_used', { feature_name: 'bias_detector' })
+      }
+
       showLoading(output)
       try {
         const prompt = `You are a political bias analyst. Analyze the following statement/headline for political bias in the Indian political context.
@@ -141,6 +149,11 @@ Statement: "${text}"`
           .replace(/```/g, '')
           .trim()
         const data = JSON.parse(cleaned)
+
+        // Save to Firestore
+        if (window.FirebaseService) {
+          window.FirebaseService.saveBiasResult(text, data.bias, data.score)
+        }
 
         // Build the visual bias meter
         output.innerHTML = `
@@ -178,11 +191,50 @@ Statement: "${text}"`
     const input = document.getElementById('rep-input')
     const output = document.getElementById('rep-output')
 
+    // Map helper functions
+    async function getCoordinates(cityName) {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cityName)}&country=India&format=json`
+        )
+        const data = await response.json()
+        if (data.length > 0) return { lat: data[0].lat, lon: data[0].lon }
+      } catch (e) {
+        console.error('Map search error', e)
+      }
+      return null
+    }
+
+    function showCityOnMap(cityName, latitude, longitude) {
+      const container = document.getElementById('map')
+      if (!container) return
+      if (container._leaflet_id) {
+        container.innerHTML = ''
+        container._leaflet_id = null
+      }
+      const map = L.map('map').setView([latitude, longitude], 10)
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+      }).addTo(map)
+      L.marker([latitude, longitude]).addTo(map).bindPopup(`📍 ${cityName}`).openPopup()
+    }
+
     btn.addEventListener('click', async () => {
       const text = input.value.trim()
       if (!text) return
 
+      // Analytics
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'feature_used', { feature_name: 'who_represents_me' })
+      }
+
       showLoading(output)
+
+      // Load map concurrently
+      getCoordinates(text).then((coords) => {
+        if (coords) showCityOnMap(text, coords.lat, coords.lon)
+      })
+
       try {
         const prompt = `You are an Indian political data expert. The user wants to know who represents them.
 Given the city/area/pin code below, provide the following information in this EXACT JSON format (no markdown fences):
@@ -216,6 +268,11 @@ Location: "${text}"`
           .trim()
         const data = JSON.parse(cleaned)
         const { mp } = data
+
+        // Save to Firestore
+        if (window.FirebaseService) {
+          window.FirebaseService.saveCitySearch(text, mp.name)
+        }
 
         output.innerHTML = `
                     <div class="rep-card">
@@ -298,6 +355,11 @@ Location: "${text}"`
     btn.addEventListener('click', async () => {
       const text = input.value.trim()
       if (!text) return
+
+      // Analytics
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'feature_used', { feature_name: 'ask_constitution' })
+      }
 
       // Append user message to the chat
       output.innerHTML += `<div class="const-msg user"><div class="const-bubble">${text}</div></div>`

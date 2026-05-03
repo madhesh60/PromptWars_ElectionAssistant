@@ -49,25 +49,19 @@ window.ManifestoParser = (function () {
     parseBtn.addEventListener('click', () => startParsing())
 
     // Filter buttons
-    document
-      .getElementById('manifesto-filters')
-      .addEventListener('click', (e) => {
-        const btn = e.target.closest('.filter-btn')
-        if (!btn) return
+    document.getElementById('manifesto-filters').addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn')
+      if (!btn) return
 
-        // Toggle active state
-        document
-          .querySelectorAll('.filter-btn')
-          .forEach((b) => b.classList.remove('active'))
-        btn.classList.add('active')
+      // Toggle active state
+      document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'))
+      btn.classList.add('active')
 
-        const cat = btn.dataset.category
-        renderPromiseCards(
-          cat === 'all'
-            ? allPromises
-            : allPromises.filter((p) => p.category === cat)
-        )
-      })
+      const cat = btn.dataset.category
+      renderPromiseCards(
+        cat === 'all' ? allPromises : allPromises.filter((p) => p.category === cat)
+      )
+    })
   }
 
   // ──────────────────────────────────────────────
@@ -242,8 +236,7 @@ If no promises are found on this page, return an empty array [].`
     output.innerHTML = ''
 
     if (promises.length === 0) {
-      output.innerHTML =
-        '<p class="no-results">No promises found for this category.</p>'
+      output.innerHTML = '<p class="no-results">No promises found for this category.</p>'
       return
     }
 

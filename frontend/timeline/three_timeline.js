@@ -156,9 +156,7 @@ window.TimelineRenderer = (function () {
     // Animated beam connection (curved)
     const curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(startX - 3, 0, 0),
-      ...electionDataRef.map(
-        (_, i) => new THREE.Vector3(startX + i * spacing, 0, 0)
-      ),
+      ...electionDataRef.map((_, i) => new THREE.Vector3(startX + i * spacing, 0, 0)),
       new THREE.Vector3(startX + (count - 1) * spacing + 3, 0, 0),
     ])
     const tubeGeo = new THREE.TubeGeometry(curve, 64, 0.06, 8, false)
@@ -371,8 +369,7 @@ window.TimelineRenderer = (function () {
       electionDataRef.forEach((ev) => {
         if (localStorage.getItem(`chk-${ev.id}`) === 'true') checked++
       })
-      if (progressBadge)
-        progressBadge.textContent = `${checked} / ${total} done`
+      if (progressBadge) progressBadge.textContent = `${checked} / ${total} done`
     }
 
     electionDataRef.forEach((event, idx) => {
@@ -393,12 +390,27 @@ window.TimelineRenderer = (function () {
                     <span class="checklist-date">${event.date}</span>
                     <p class="checklist-desc">${event.description}</p>
                 </div>
-                <span class="checklist-status ${statusClass}">${statusLabel}</span>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
+                    <span class="checklist-status ${statusClass}">${statusLabel}</span>
+                    <button class="btn secondary-btn add-calendar-btn" data-phase="${event.phase}" data-date="${event.date}" data-desc="${event.description}" style="padding: 4px 8px; font-size: 11px;">📅 Add to Calendar</button>
+                </div>
             `
 
       // Click checklist item → fly camera to corresponding 3D node
       itemDiv.addEventListener('click', (e) => {
         if (e.target.tagName === 'INPUT') return // let checkbox handle itself
+        if (e.target.tagName === 'BUTTON') {
+          // Add to Google Calendar
+          const phase = e.target.getAttribute('data-phase')
+          let dateStr = e.target.getAttribute('data-date')
+          // Basic parse of date if it's not YYYY-MM-DD
+          // Assuming date is in format "19 April" etc, but if it has a real date we format it.
+          // Fallback to a placeholder if date parsing is complex for this demo
+          const startDate = dateStr.replace(/\D/g, '') || '20240419' // fallback
+          const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(phase)}&dates=${startDate}/${startDate}&details=${encodeURIComponent(e.target.getAttribute('data-desc'))}`
+          window.open(calendarUrl, '_blank')
+          return
+        }
         isAutoPlaying = false
         if (nodes[idx] && typeof gsap !== 'undefined') {
           const node = nodes[idx]
@@ -419,8 +431,7 @@ window.TimelineRenderer = (function () {
           })
           // Show detail
           document.getElementById('phase-title').innerText = node.userData.title
-          document.getElementById('phase-date').innerText =
-            `Date: ${node.userData.date}`
+          document.getElementById('phase-date').innerText = `Date: ${node.userData.date}`
           document.getElementById('phase-desc').innerText = node.userData.desc
           document.getElementById('timeline-details').classList.remove('hidden')
         }
