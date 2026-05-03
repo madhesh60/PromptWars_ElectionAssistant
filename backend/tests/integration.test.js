@@ -27,35 +27,43 @@ describe('🔗 Integration Tests — Full Request Pipeline', () => {
         .mockResolvedValueOnce('First response')
         .mockResolvedValueOnce('Second response')
 
-      const turn1 = await request(app).post('/api/chat').send({
-        contents: [{ role: 'user', parts: [{ text: 'Who is the PM of India?' }] }],
-      })
+      const turn1 = await request(app)
+        .post('/api/chat')
+        .send({
+          contents: [{ role: 'user', parts: [{ text: 'Who is the PM of India?' }] }],
+        })
       expect(turn1.statusCode).toBe(200)
       expect(turn1.body.response).toBe('First response')
 
-      const turn2 = await request(app).post('/api/chat').send({
-        contents: [
-          { role: 'user', parts: [{ text: 'Who is the PM of India?' }] },
-          { role: 'model', parts: [{ text: 'First response' }] },
-          { role: 'user', parts: [{ text: 'What is their party?' }] },
-        ],
-      })
+      const turn2 = await request(app)
+        .post('/api/chat')
+        .send({
+          contents: [
+            { role: 'user', parts: [{ text: 'Who is the PM of India?' }] },
+            { role: 'model', parts: [{ text: 'First response' }] },
+            { role: 'user', parts: [{ text: 'What is their party?' }] },
+          ],
+        })
       expect(turn2.statusCode).toBe(200)
       expect(turn2.body.response).toBe('Second response')
     })
 
     it('rejects chat with empty parts', async () => {
-      const res = await request(app).post('/api/chat').send({
-        contents: [{ role: 'user', parts: [{ text: '' }] }],
-      })
+      const res = await request(app)
+        .post('/api/chat')
+        .send({
+          contents: [{ role: 'user', parts: [{ text: '' }] }],
+        })
       expect(res.statusCode).toBe(400)
     })
 
     it('returns consistent response structure', async () => {
       geminiService.generateContent.mockResolvedValue('Structured answer')
-      const res = await request(app).post('/api/chat').send({
-        contents: [{ role: 'user', parts: [{ text: 'What is EVM?' }] }],
-      })
+      const res = await request(app)
+        .post('/api/chat')
+        .send({
+          contents: [{ role: 'user', parts: [{ text: 'What is EVM?' }] }],
+        })
       expect(res.body).toEqual({ response: 'Structured answer' })
     })
   })
@@ -152,9 +160,7 @@ describe('🔗 Integration Tests — Full Request Pipeline', () => {
   // ──────────────────────────────────────────────
   describe('POST /api/gemini-vision', () => {
     it('requires both imageBase64 and prompt', async () => {
-      const res = await request(app)
-        .post('/api/gemini-vision')
-        .send({ imageBase64: 'abc123' }) // missing prompt
+      const res = await request(app).post('/api/gemini-vision').send({ imageBase64: 'abc123' }) // missing prompt
       expect(res.statusCode).toBe(400)
     })
 
@@ -216,9 +222,7 @@ describe('🔗 Integration Tests — Full Request Pipeline', () => {
 
     it('all 500 errors have an error field', async () => {
       geminiService.generateContent.mockRejectedValue(new Error('Gemini down'))
-      const res = await request(app)
-        .post('/api/constitution')
-        .send({ text: 'test question' })
+      const res = await request(app).post('/api/constitution').send({ text: 'test question' })
       expect(res.statusCode).toBe(500)
       expect(res.body).toHaveProperty('error')
     })

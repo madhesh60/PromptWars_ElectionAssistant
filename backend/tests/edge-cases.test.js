@@ -31,11 +31,15 @@ describe('🧨 Edge Cases & Stress Tests', () => {
     attackPayloads.forEach(({ name, text }) => {
       it(`handles ${name} without crashing`, async () => {
         geminiService.generateContent.mockResolvedValue(
-          JSON.stringify({ bias: 'Center', score: 50, reasoning: 'safe', indicators: [], suggestion: 'none' })
+          JSON.stringify({
+            bias: 'Center',
+            score: 50,
+            reasoning: 'safe',
+            indicators: [],
+            suggestion: 'none',
+          })
         )
-        const res = await request(app)
-          .post('/api/bias-detect')
-          .send({ text })
+        const res = await request(app).post('/api/bias-detect').send({ text })
         // Must not crash (no 5xx from unhandled error)
         expect([200, 400]).toContain(res.statusCode)
         // Must not echo injected content back unsanitized
@@ -82,9 +86,7 @@ describe('🧨 Edge Cases & Stress Tests', () => {
   // ──────────────────────────────────────────────
   describe('Gemini Service Failure Modes', () => {
     it('handles Gemini timeout gracefully', async () => {
-      geminiService.generateContent.mockRejectedValue(
-        new Error('Request timeout after 30000ms')
-      )
+      geminiService.generateContent.mockRejectedValue(new Error('Request timeout after 30000ms'))
       const res = await request(app)
         .post('/api/chat')
         .send({ contents: [{ role: 'user', parts: [{ text: 'test' }] }] })
@@ -191,9 +193,7 @@ describe('🧨 Edge Cases & Stress Tests', () => {
           mp: { name: 'Test MP', party: 'INC' },
         })
       )
-      const res = await request(app)
-        .post('/api/represent')
-        .send({ text: '400001' })
+      const res = await request(app).post('/api/represent').send({ text: '400001' })
       expect(res.statusCode).toBe(200)
     })
 
@@ -212,9 +212,7 @@ describe('🧨 Edge Cases & Stress Tests', () => {
           mp: { name: 'Data not available', party: 'N/A' },
         })
       )
-      const res = await request(app)
-        .post('/api/represent')
-        .send({ text: 'XYZ UNKNOWN CITY 999' })
+      const res = await request(app).post('/api/represent').send({ text: 'XYZ UNKNOWN CITY 999' })
       expect(res.statusCode).toBe(200)
       expect(res.body.response.mp.name).toBe('Data not available')
     })

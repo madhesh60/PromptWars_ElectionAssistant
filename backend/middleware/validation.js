@@ -53,8 +53,7 @@ const sanitiseField = (obj, key, errorMsg) => {
   if (obj[key] === undefined || obj[key] === null) return errorMsg
   const value = stripHtml(String(obj[key]).trim())
   if (!value) return errorMsg
-  if (value.length > MAX_LENGTH)
-    return `Input exceeds ${MAX_LENGTH} characters`
+  if (value.length > MAX_LENGTH) return `Input exceeds ${MAX_LENGTH} characters`
   obj[key] = value
   return null
 }
@@ -71,9 +70,7 @@ const validateInput = (req, res, next) => {
   // ── Chat endpoint: req.body.contents ──────────────────────────────────────
   if (req.body.contents !== undefined) {
     if (!Array.isArray(req.body.contents) || req.body.contents.length === 0) {
-      return res
-        .status(400)
-        .json({ error: CONSTANTS.ERROR_MESSAGES.CONTENTS_REQUIRED })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.CONTENTS_REQUIRED })
     }
     for (const msg of req.body.contents) {
       if (msg.parts && Array.isArray(msg.parts)) {
@@ -105,9 +102,7 @@ const validateInput = (req, res, next) => {
   // ── Vision endpoint: requires imageBase64 ─────────────────────────────────
   if (req.body.imageBase64 !== undefined || req.body.mimeType !== undefined) {
     if (!req.body.imageBase64 || !req.body.prompt) {
-      return res
-        .status(400)
-        .json({ error: CONSTANTS.ERROR_MESSAGES.VISION_REQ_MISSING })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.VISION_REQ_MISSING })
     }
     return next()
   }

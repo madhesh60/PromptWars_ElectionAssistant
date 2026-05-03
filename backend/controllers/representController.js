@@ -11,9 +11,7 @@ const getRepresentatives = async (req, res) => {
   try {
     const { text } = req.body
     if (!text) {
-      return res
-        .status(400)
-        .json({ error: CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED })
     }
 
     const prompt = `You are an Indian political data expert. The user wants to know who represents them.

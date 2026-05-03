@@ -11,9 +11,7 @@ const handleGeminiText = async (req, res) => {
   try {
     const { prompt, fileContent, fileName } = req.body
     if (!prompt) {
-      return res
-        .status(400)
-        .json({ error: CONSTANTS.ERROR_MESSAGES.PROMPT_REQUIRED })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.PROMPT_REQUIRED })
     }
 
     let fullPrompt = prompt
@@ -42,9 +40,7 @@ const handleGeminiVision = async (req, res) => {
   try {
     const { imageBase64, mimeType, prompt } = req.body
     if (!imageBase64 || !prompt) {
-      return res
-        .status(400)
-        .json({ error: CONSTANTS.ERROR_MESSAGES.VISION_REQ_MISSING })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.VISION_REQ_MISSING })
     }
 
     const imagePart = {
@@ -54,10 +50,7 @@ const handleGeminiVision = async (req, res) => {
       },
     }
 
-    const responseText = await geminiService.generateContent([
-      prompt,
-      imagePart,
-    ])
+    const responseText = await geminiService.generateContent([prompt, imagePart])
     res.json({ response: responseText })
   } catch (error) {
     res.status(500).json({

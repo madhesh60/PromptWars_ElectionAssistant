@@ -27,3 +27,6 @@ npm-debug.log*
 dist/
 build/
 backend/coverage/
+
+GoogleService.md
+toDoGservices.md

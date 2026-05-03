@@ -119,9 +119,7 @@ test.describe('🌐 Electo Frontend — Smoke Tests', () => {
       if (!isVisible) continue
       const ariaLabel = await input.getAttribute('aria-label')
       const id = await input.getAttribute('id')
-      const labelCount = id
-        ? await page.locator(`label[for="${id}"]`).count()
-        : 0
+      const labelCount = id ? await page.locator(`label[for="${id}"]`).count() : 0
       expect(ariaLabel || labelCount > 0).toBeTruthy()
     }
   })

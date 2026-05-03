@@ -37,9 +37,7 @@ describe('Other API Endpoints', () => {
   describe('POST /api/gemini', () => {
     it('returns gemini proxy text', async () => {
       geminiService.generateContent.mockResolvedValue('text response')
-      const response = await request(app)
-        .post('/api/gemini')
-        .send({ prompt: 'test' })
+      const response = await request(app).post('/api/gemini').send({ prompt: 'test' })
       expect(response.statusCode).toBe(200)
       expect(response.body.response).toBe('text response')
     })
@@ -67,9 +65,7 @@ describe('Other API Endpoints', () => {
       expect(response.body.response).toBe('vision response')
     })
     it('handles missing required fields', async () => {
-      const response = await request(app)
-        .post('/api/gemini-vision')
-        .send({ prompt: 'test' })
+      const response = await request(app).post('/api/gemini-vision').send({ prompt: 'test' })
       expect(response.statusCode).toBe(400)
     })
   })
@@ -77,9 +73,7 @@ describe('Other API Endpoints', () => {
   describe('POST /api/tts', () => {
     it('returns audio data', async () => {
       ttsService.synthesizeSpeech.mockResolvedValue('base64audio')
-      const response = await request(app)
-        .post('/api/tts')
-        .send({ text: 'test' })
+      const response = await request(app).post('/api/tts').send({ text: 'test' })
       expect(response.statusCode).toBe(200)
       expect(response.body.audioContent).toBe('base64audio')
     })
@@ -89,9 +83,7 @@ describe('Other API Endpoints', () => {
     })
     it('handles errors', async () => {
       ttsService.synthesizeSpeech.mockRejectedValue(new Error('tts fail'))
-      const response = await request(app)
-        .post('/api/tts')
-        .send({ text: 'test' })
+      const response = await request(app).post('/api/tts').send({ text: 'test' })
       expect(response.statusCode).toBe(500)
     })
   })

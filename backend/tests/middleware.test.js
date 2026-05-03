@@ -13,9 +13,7 @@ describe('🛡️ Middleware & Security Tests', () => {
   describe('Input Length Validation', () => {
     it('rejects text input exceeding 2000 characters', async () => {
       const longText = 'a'.repeat(2001)
-      const res = await request(app)
-        .post('/api/bias-detect')
-        .send({ text: longText })
+      const res = await request(app).post('/api/bias-detect').send({ text: longText })
       expect(res.statusCode).toBe(400)
       expect(res.body.error).toMatch(/exceeds/i)
     })
@@ -23,22 +21,26 @@ describe('🛡️ Middleware & Security Tests', () => {
     it('accepts text at exactly the max length boundary', async () => {
       const geminiService = require('../services/geminiService')
       jest.mock('../services/geminiService')
-      geminiService.generateContent = jest.fn().mockResolvedValue(
-        JSON.stringify({ bias: 'Center', score: 50, reasoning: 'ok', indicators: [], suggestion: 'none' })
-      )
+      geminiService.generateContent = jest
+        .fn()
+        .mockResolvedValue(
+          JSON.stringify({
+            bias: 'Center',
+            score: 50,
+            reasoning: 'ok',
+            indicators: [],
+            suggestion: 'none',
+          })
+        )
       const exactText = 'a'.repeat(2000)
-      const res = await request(app)
-        .post('/api/bias-detect')
-        .send({ text: exactText })
+      const res = await request(app).post('/api/bias-detect').send({ text: exactText })
       // Should not get a 400 for length
       expect(res.statusCode).not.toBe(400)
     })
 
     it('rejects prompt exceeding 2000 characters', async () => {
       const longPrompt = 'x'.repeat(2001)
-      const res = await request(app)
-        .post('/api/gemini')
-        .send({ prompt: longPrompt })
+      const res = await request(app).post('/api/gemini').send({ prompt: longPrompt })
       expect(res.statusCode).toBe(400)
       expect(res.body.error).toMatch(/exceeds/i)
     })
@@ -51,9 +53,17 @@ describe('🛡️ Middleware & Security Tests', () => {
     it('strips HTML tags from text input', async () => {
       const geminiService = require('../services/geminiService')
       jest.mock('../services/geminiService')
-      geminiService.generateContent = jest.fn().mockResolvedValue(
-        JSON.stringify({ bias: 'Center', score: 50, reasoning: 'ok', indicators: [], suggestion: 'none' })
-      )
+      geminiService.generateContent = jest
+        .fn()
+        .mockResolvedValue(
+          JSON.stringify({
+            bias: 'Center',
+            score: 50,
+            reasoning: 'ok',
+            indicators: [],
+            suggestion: 'none',
+          })
+        )
       // Send XSS payload — it should not crash the server
       const res = await request(app)
         .post('/api/bias-detect')
@@ -75,16 +85,12 @@ describe('🛡️ Middleware & Security Tests', () => {
     })
 
     it('returns 400 for null text to /api/bias-detect', async () => {
-      const res = await request(app)
-        .post('/api/bias-detect')
-        .send({ text: '' })
+      const res = await request(app).post('/api/bias-detect').send({ text: '' })
       expect(res.statusCode).toBe(400)
     })
 
     it('returns 400 for whitespace-only text', async () => {
-      const res = await request(app)
-        .post('/api/constitution')
-        .send({ text: '   ' })
+      const res = await request(app).post('/api/constitution').send({ text: '   ' })
       expect(res.statusCode).toBe(400)
     })
 

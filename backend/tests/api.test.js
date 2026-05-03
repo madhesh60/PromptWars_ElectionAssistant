@@ -14,25 +14,19 @@ describe('API Endpoints Tests', () => {
 
   describe('POST /api/chat', () => {
     it('returns a response when given a question', async () => {
-      geminiService.generateContent.mockResolvedValue(
-        'Hello, this is a mock chat response.'
-      )
+      geminiService.generateContent.mockResolvedValue('Hello, this is a mock chat response.')
       const response = await request(app)
         .post('/api/chat')
         .send({ contents: [{ role: 'user', parts: [{ text: 'Hi' }] }] })
 
       expect(response.statusCode).toBe(200)
-      expect(response.body.response).toBe(
-        'Hello, this is a mock chat response.'
-      )
+      expect(response.body.response).toBe('Hello, this is a mock chat response.')
     })
 
     it('returns 400 when contents are missing (empty request)', async () => {
       const response = await request(app).post('/api/chat').send({})
       expect(response.statusCode).toBe(400)
-      expect(response.body.error).toBe(
-        CONSTANTS.ERROR_MESSAGES.CONTENTS_REQUIRED
-      )
+      expect(response.body.error).toBe(CONSTANTS.ERROR_MESSAGES.CONTENTS_REQUIRED)
     })
   })
 
@@ -56,9 +50,7 @@ describe('API Endpoints Tests', () => {
     })
 
     it('returns 400 when an empty string is sent', async () => {
-      const response = await request(app)
-        .post('/api/bias-detect')
-        .send({ text: '' })
+      const response = await request(app).post('/api/bias-detect').send({ text: '' })
       expect(response.statusCode).toBe(400)
       expect(response.body.error).toBe(CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED)
     })
@@ -73,9 +65,7 @@ describe('API Endpoints Tests', () => {
       })
       geminiService.generateContent.mockResolvedValue(mockResult)
 
-      const response = await request(app)
-        .post('/api/represent')
-        .send({ text: 'Mumbai' })
+      const response = await request(app).post('/api/represent').send({ text: 'Mumbai' })
 
       expect(response.statusCode).toBe(200)
       expect(response.body.response.constituency).toBe('Test Constituency')
@@ -90,9 +80,7 @@ describe('API Endpoints Tests', () => {
       })
       geminiService.generateContent.mockResolvedValue(mockResult)
 
-      const response = await request(app)
-        .post('/api/represent')
-        .send({ text: 'Mumbbbaaiii' })
+      const response = await request(app).post('/api/represent').send({ text: 'Mumbbbaaiii' })
 
       expect(response.statusCode).toBe(200)
       expect(response.body.response.mp.name).toBe('Not Found due to typo')
@@ -120,9 +108,7 @@ describe('API Endpoints Tests', () => {
         new Error('API key not valid. Please pass a valid API key.')
       )
 
-      const response = await request(app)
-        .post('/api/constitution')
-        .send({ text: 'Test' })
+      const response = await request(app).post('/api/constitution').send({ text: 'Test' })
 
       expect(response.statusCode).toBe(500)
       expect(response.body.error).toBe(CONSTANTS.ERROR_MESSAGES.GENERIC)

@@ -85,6 +85,19 @@ window.ManifestoParser = (function () {
 
     const file = fileInput.files[0]
 
+    // Upload to Firebase Storage for secure auditing
+    if (window.FirebaseService && window.FirebaseService.uploadManifestoPDF) {
+      progressText.textContent = 'Uploading PDF to secure cloud storage...'
+      const url = await window.FirebaseService.uploadManifestoPDF(file)
+      if (url) {
+        console.log('PDF securely uploaded to:', url)
+        // Analytics
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'file_uploaded', { feature_name: 'manifesto_parser' })
+        }
+      }
+    }
+
     // Read the PDF file as ArrayBuffer
     const arrayBuffer = await file.arrayBuffer()
 

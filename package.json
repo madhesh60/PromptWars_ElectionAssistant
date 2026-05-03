@@ -18,7 +18,14 @@
     "type": "git",
     "url": "git+https://github.com/madhesh60/Electo.git"
   },
-  "keywords": ["election", "india", "ai", "civic", "google", "gemini"],
+  "keywords": [
+    "election",
+    "india",
+    "ai",
+    "civic",
+    "google",
+    "gemini"
+  ],
   "author": "madhesh60",
   "license": "ISC",
   "type": "commonjs",

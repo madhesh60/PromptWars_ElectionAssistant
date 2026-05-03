@@ -50,9 +50,39 @@ app.use(
 // ── Rate Limiting ─────────────────────────────────────────────────────────────
 const isTest = process.env.NODE_ENV === 'test'
 
+// ── Advanced Custom Security Middleware ──────────────────────────────────────
+app.use((req, res, next) => {
+  // 1. Strict Content-Type check for POST/PUT
+  if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
+    const contentType = req.headers['content-type']
+    if (!contentType || !contentType.includes('application/json')) {
+      return res
+        .status(415)
+        .json({ error: 'Unsupported Media Type: Only application/json is allowed' })
+    }
+  }
+
+  // 2. HTTP Parameter Pollution (HPP) Guard for Express 5+
+  // Reject requests with array-based query parameters where a string is expected
+  if (req.query) {
+    for (const key in req.query) {
+      if (Array.isArray(req.query[key])) {
+        return res.status(400).json({ error: 'HTTP Parameter Pollution detected.' })
+      }
+    }
+  }
+
+  // 3. Prevent TRACE/TRACK methods (XST)
+  if (['TRACE', 'TRACK'].includes(req.method)) {
+    return res.status(405).json({ error: 'Method Not Allowed' })
+  }
+
+  next()
+})
+
 const globalLimiter = rateLimit({
-  windowMs: 60 * 1000,       // 1 minute window
-  max: isTest ? 10000 : 60,  // Effectively disabled in test mode
+  windowMs: 60 * 1000, // 1 minute window
+  max: isTest ? 10000 : 60, // Effectively disabled in test mode
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, please slow down.' },
@@ -60,7 +90,7 @@ const globalLimiter = rateLimit({
 
 const strictLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: isTest ? 10000 : 15,  // Effectively disabled in test mode
+  max: isTest ? 10000 : 15, // Effectively disabled in test mode
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'AI request limit reached. Please wait 60 seconds.' },

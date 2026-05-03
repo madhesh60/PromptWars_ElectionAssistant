@@ -11,9 +11,7 @@ const synthesizeAudio = async (req, res) => {
   try {
     const { text } = req.body
     if (!text) {
-      return res
-        .status(400)
-        .json({ error: CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED })
     }
 
     const audioContent = await ttsService.synthesizeSpeech(text)

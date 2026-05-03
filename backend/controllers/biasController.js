@@ -11,9 +11,7 @@ const analyzeBias = async (req, res) => {
   try {
     const { text } = req.body
     if (!text) {
-      return res
-        .status(400)
-        .json({ error: CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED })
     }
 
     const prompt = `You are a political bias analyst. Analyze the following statement/headline for political bias in the Indian political context.

@@ -10,9 +10,7 @@ const handleChat = async (req, res) => {
   try {
     const { contents } = req.body
     if (!contents) {
-      return res
-        .status(400)
-        .json({ error: CONSTANTS.ERROR_MESSAGES.CONTENTS_REQUIRED })
+      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.CONTENTS_REQUIRED })
     }
 
     const responseText = await geminiService.generateContent({ contents })
