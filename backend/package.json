@@ -1,15 +1,47 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Electo AI Election Assistant — Production Backend",
+  "main": "server.js",
   "scripts": {
-    "test": "jest --coverage"
+    "start": "node server.js",
+    "test": "jest --coverage --forceExit",
+    "test:unit": "jest --testPathPattern='(services|validation-unit)' --forceExit",
+    "test:middleware": "jest --testPathPattern='(middleware|validation)' --forceExit",
+    "test:integration": "jest --testPathPattern='(api|otherApi|integration)' --forceExit",
+    "test:edge": "jest --testPathPattern='edge-cases' --forceExit",
+    "test:all": "jest --coverage --verbose --forceExit",
+    "test:ci": "jest --coverage --coverageReporters=lcov --coverageReporters=text --forceExit --ci"
   },
-  "keywords": [],
-  "author": "",
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/tests/**/*.test.js"],
+    "collectCoverageFrom": [
+      "controllers/**/*.js",
+      "middleware/**/*.js",
+      "services/**/*.js",
+      "routes/**/*.js",
+      "server.js",
+      "!**/node_modules/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 70,
+        "functions": 70,
+        "branches": 60,
+        "statements": 70
+      }
+    },
+    "testTimeout": 15000,
+    "verbose": true
+  },
+  "keywords": ["election", "india", "ai", "civic", "backend"],
+  "author": "madhesh60",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.6",
@@ -17,7 +49,9 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.4.1",
     "helmet": "^8.1.0",
-    "puppeteer": "^24.42.0"
+    "hpp": "^0.2.3",
+    "puppeteer": "^24.42.0",
+    "xss-clean": "^0.1.4"
   },
   "devDependencies": {
     "jest": "^30.3.0",

@@ -73,7 +73,7 @@ window.VoiceAssistant = (function () {
         console.error('Error in voice flow:', error)
         updateMessageUI(
           loadingId,
-          'Sorry, there was an error processing your request.',
+          'Sorry, there was an error processing your request.'
         )
         statusText.style.display = 'none'
       }
@@ -127,7 +127,7 @@ window.VoiceAssistant = (function () {
       const bubble = msgDiv.querySelector('.bubble')
       let formattedText = newText.replace(
         /\*\*(.*?)\*\*/g,
-        '<strong>$1</strong>',
+        '<strong>$1</strong>'
       )
       formattedText = formattedText.replace(/\n/g, '<br>')
       bubble.innerHTML = formattedText

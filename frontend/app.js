@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (window.TimelineRenderer) {
     window.TimelineRenderer.init(
       'three-canvas-container',
-      AppState.electionData,
+      AppState.electionData
     )
   }
 

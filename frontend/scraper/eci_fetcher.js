@@ -73,7 +73,7 @@ window.ECIFetcher = (function () {
 
       // Call the backend API endpoint
       const response = await fetch(
-        'https://prompt-wars-election-assistant-xqq4.vercel.app/api/election-data',
+        'https://prompt-wars-election-assistant-xqq4.vercel.app/api/election-data'
       )
 
       // Throw if the server responded with an error

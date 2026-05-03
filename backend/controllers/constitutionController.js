@@ -11,7 +11,9 @@ const getConstitutionAnswer = async (req, res) => {
   try {
     const { text } = req.body
     if (!text) {
-      return res.status(400).json({ error: CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED })
+      return res
+        .status(400)
+        .json({ error: CONSTANTS.ERROR_MESSAGES.TEXT_REQUIRED })
     }
 
     const prompt = `You are a constitutional law expert specializing in the Indian Constitution and Election Laws.

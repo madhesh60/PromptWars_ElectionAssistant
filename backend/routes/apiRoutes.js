@@ -10,7 +10,9 @@ const { handleChat } = require('../controllers/chatController')
 const { synthesizeAudio } = require('../controllers/ttsController')
 const { analyzeBias } = require('../controllers/biasController')
 const { getRepresentatives } = require('../controllers/representController')
-const { getConstitutionAnswer } = require('../controllers/constitutionController')
+const {
+  getConstitutionAnswer,
+} = require('../controllers/constitutionController')
 const { validateInput } = require('../middleware/validation')
 
 const router = express.Router()

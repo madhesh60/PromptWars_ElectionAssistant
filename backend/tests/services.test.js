@@ -8,12 +8,12 @@ jest.mock('@google/generative-ai', () => {
         getGenerativeModel: jest.fn().mockReturnValue({
           generateContent: jest.fn().mockResolvedValue({
             response: {
-              text: () => 'mocked gemini response'
-            }
-          })
-        })
+              text: () => 'mocked gemini response',
+            },
+          }),
+        }),
       }
-    })
+    }),
   }
 })
 
@@ -42,7 +42,7 @@ describe('Services Tests', () => {
     it('synthesizes speech successfully', async () => {
       process.env.GOOGLE_TTS_API_KEY = 'test-key'
       global.fetch.mockResolvedValue({
-        json: jest.fn().mockResolvedValue({ audioContent: 'base64audio' })
+        json: jest.fn().mockResolvedValue({ audioContent: 'base64audio' }),
       })
 
       const audio = await ttsService.synthesizeSpeech('test text')
@@ -51,16 +51,20 @@ describe('Services Tests', () => {
 
     it('throws error if API key is missing', async () => {
       delete process.env.GOOGLE_TTS_API_KEY
-      await expect(ttsService.synthesizeSpeech('test')).rejects.toThrow('TTS API key not configured.')
+      await expect(ttsService.synthesizeSpeech('test')).rejects.toThrow(
+        'TTS API key not configured.'
+      )
     })
 
     it('throws error if response has no audioContent', async () => {
       process.env.GOOGLE_TTS_API_KEY = 'test-key'
       global.fetch.mockResolvedValue({
-        json: jest.fn().mockResolvedValue({})
+        json: jest.fn().mockResolvedValue({}),
       })
 
-      await expect(ttsService.synthesizeSpeech('test')).rejects.toThrow('Failed to generate TTS audio from API response.')
+      await expect(ttsService.synthesizeSpeech('test')).rejects.toThrow(
+        'Failed to generate TTS audio from API response.'
+      )
     })
   })
 })

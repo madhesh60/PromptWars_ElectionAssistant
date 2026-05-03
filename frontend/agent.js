@@ -27,7 +27,7 @@ window.AgenticSystem = (function () {
         .register('service-worker.js')
         .then((reg) => console.log('Service Worker registered:', reg.scope))
         .catch((err) =>
-          console.error('Service Worker registration failed:', err),
+          console.error('Service Worker registration failed:', err)
         )
     }
   }
@@ -79,7 +79,7 @@ window.AgenticSystem = (function () {
   function triggerAlarm() {
     // Create a looping alarm sound from a free sound effect URL
     const alarmSound = new Audio(
-      'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3',
+      'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'
     )
     alarmSound.loop = true
 

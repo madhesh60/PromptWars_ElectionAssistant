@@ -65,7 +65,7 @@ window.ManifestoParser = (function () {
         renderPromiseCards(
           cat === 'all'
             ? allPromises
-            : allPromises.filter((p) => p.category === cat),
+            : allPromises.filter((p) => p.category === cat)
         )
       })
   }

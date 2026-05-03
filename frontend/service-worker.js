@@ -24,7 +24,7 @@ self.addEventListener('install', (event) => {
       return cache
         .addAll(ASSETS_TO_CACHE)
         .catch((err) => console.warn('Cache error (ignored for demo):', err))
-    }),
+    })
   )
 })
 
@@ -36,7 +36,7 @@ self.addEventListener('fetch', (event) => {
         return response
       }
       return fetch(event.request)
-    }),
+    })
   )
 })
 

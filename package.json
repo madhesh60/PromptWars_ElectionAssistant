@@ -4,18 +4,35 @@
   "description": "AI-driven Indian Election Assistant",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cd backend && npm run test:ci",
+    "test:e2e": "npx playwright test",
+    "test:all": "npm test && npm run test:e2e",
+    "lint": "npx eslint . --ext .js",
+    "lint:fix": "npx eslint . --ext .js --fix",
+    "format": "npx prettier --write \"**/*.{js,json,md,html,css}\" --ignore-path .gitignore",
+    "format:check": "npx prettier --check \"**/*.{js,json,md,html,css}\" --ignore-path .gitignore",
+    "security-check": "npm audit --audit-level=high",
+    "validate": "npm run lint && npm run format:check && npm test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madhesh60/Electo.git"
   },
-  "keywords": ["election", "india", "ai", "civic"],
+  "keywords": ["election", "india", "ai", "civic", "google", "gemini"],
   "author": "madhesh60",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "bugs": {
     "url": "https://github.com/madhesh60/Electo/issues"
   },
-  "homepage": "https://github.com/madhesh60/Electo#readme"
+  "homepage": "https://github.com/madhesh60/Electo#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "eslint": "^8.57.1",
+    "prettier": "^3.8.3"
+  }
 }

@@ -1,0 +1,55 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true,
+    "jest": true
+  },
+  "globals": {
+    "THREE": "readonly",
+    "gsap": "readonly",
+    "pdfjsLib": "readonly"
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "commonjs"
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-console": "warn",
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-new-func": "error",
+    "no-script-url": "error",
+    "no-proto": "error",
+    "no-extend-native": "error",
+    "no-var": "warn",
+    "prefer-const": "warn",
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "no-throw-literal": "error"
+  },
+  "overrides": [
+    {
+      "files": ["frontend/**/*.js"],
+      "env": { "browser": true, "node": false }
+    },
+    {
+      "files": ["backend/**/*.js"],
+      "env": { "browser": false, "node": true }
+    },
+    {
+      "files": ["tests/**/*.spec.js", "backend/tests/**/*.test.js"],
+      "env": { "jest": true, "node": true },
+      "rules": { "no-console": "off" }
+    }
+  ],
+  "ignorePatterns": [
+    "node_modules/",
+    "backend/node_modules/",
+    "coverage/",
+    "playwright-report/",
+    "complexity-report/"
+  ]
+}

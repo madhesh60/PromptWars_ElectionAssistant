@@ -45,7 +45,7 @@ window.ChatAssistant = (function () {
     addMessageToUI('user', text)
     chatInput.value = ''
     chatInput.style.height = 'auto' // reset height
-    
+
     // Show "thinking" message
     const announcer = document.getElementById('loading-announcer')
     if (announcer) announcer.textContent = 'Loading answer...'
@@ -60,7 +60,7 @@ window.ChatAssistant = (function () {
       console.error('Chat error:', error)
       updateMessageUI(
         loadingId,
-        'Sorry, I am having trouble connecting right now. Please try again.',
+        'Sorry, I am having trouble connecting right now. Please try again.'
       )
     }
   }
@@ -92,7 +92,7 @@ window.ChatAssistant = (function () {
       const bubble = msgDiv.querySelector('.bubble')
       let formattedText = newText.replace(
         /\*\*(.*?)\*\*/g,
-        '<strong>$1</strong>',
+        '<strong>$1</strong>'
       )
       formattedText = formattedText.replace(/\n/g, '<br>')
       bubble.innerHTML = formattedText
@@ -131,7 +131,7 @@ window.ChatAssistant = (function () {
 
       if (conversationContext.length > 10) {
         conversationContext = conversationContext.slice(
-          conversationContext.length - 10,
+          conversationContext.length - 10
         )
       }
       return replyText

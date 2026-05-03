@@ -157,7 +157,7 @@ window.TimelineRenderer = (function () {
     const curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(startX - 3, 0, 0),
       ...electionDataRef.map(
-        (_, i) => new THREE.Vector3(startX + i * spacing, 0, 0),
+        (_, i) => new THREE.Vector3(startX + i * spacing, 0, 0)
       ),
       new THREE.Vector3(startX + (count - 1) * spacing + 3, 0, 0),
     ])
@@ -266,7 +266,7 @@ window.TimelineRenderer = (function () {
       () => {
         label.style.opacity = '1'
       },
-      800 + index * 150,
+      800 + index * 150
     )
   }
 

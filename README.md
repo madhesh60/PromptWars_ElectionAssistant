@@ -4,15 +4,15 @@
 
 ## Features
 
-| Feature | Description |
-|---|---|
-| **AI Chat** | Gemini-powered Q&A on Indian elections |
-| **Bias Detector** | Detects political lean in statements (Left / Center / Right) |
-| **Manifesto Analyzer** | Parse party PDFs and extract promises |
-| **Who Represents Me** | Find your MP/MLA by city or pincode |
-| **Ask The Constitution** | Query Indian election laws & constitutional provisions |
-| **3D Election Timeline** | Interactive Three.js visualization of election phases |
-| **Agentic Reminders** | Push notifications for key electoral dates |
+| Feature                  | Description                                                  |
+| ------------------------ | ------------------------------------------------------------ |
+| **AI Chat**              | Gemini-powered Q&A on Indian elections                       |
+| **Bias Detector**        | Detects political lean in statements (Left / Center / Right) |
+| **Manifesto Analyzer**   | Parse party PDFs and extract promises                        |
+| **Who Represents Me**    | Find your MP/MLA by city or pincode                          |
+| **Ask The Constitution** | Query Indian election laws & constitutional provisions       |
+| **3D Election Timeline** | Interactive Three.js visualization of election phases        |
+| **Agentic Reminders**    | Push notifications for key electoral dates                   |
 
 ## Architecture
 
@@ -32,13 +32,13 @@ graph TD
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | Vanilla JS / HTML / CSS |
-| AI | Google Gemini API |
-| Voice | Web Speech API + Google TTS |
-| 3D | Three.js |
-| Backend | Node.js + Express |
+| Layer         | Technology                     |
+| ------------- | ------------------------------ |
+| Frontend      | Vanilla JS / HTML / CSS        |
+| AI            | Google Gemini API              |
+| Voice         | Web Speech API + Google TTS    |
+| 3D            | Three.js                       |
+| Backend       | Node.js + Express              |
 | Notifications | Web Push API + Service Workers |
 
 ## Setup
@@ -51,15 +51,18 @@ cd backend && npm install
 ```
 
 Create a `.env` file:
+
 ```env
 GEMINI_API_KEY=your_gemini_key
 GOOGLE_TTS_API_KEY=your_tts_key
 ```
 
 Run:
+
 ```bash
 npm run dev
 ```
 
 ---
-*Built for the Google Antigravity PromptWars Hackathon*
+
+_Built for the Google Antigravity PromptWars Hackathon_
